@@ -9,9 +9,8 @@ object Jsonz {
   def stringify(js: JsValue): String = JerksonJson.generate(js)
   def toJson[T](o: T)(implicit jsw: Writes[T]) = jsw.writes(o)
 
-  // make some nice helpers
   def toJsonStr[T: Writes](o: T) = stringify(toJson(o))
-  // fromJsonStr
+  def fromJsonStr[T: Reads](str: String) = fromJson(parse(str))
   // toJsonBytes
   // fromJsonBytes
   // streaming

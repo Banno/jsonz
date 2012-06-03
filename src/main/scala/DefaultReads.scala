@@ -6,7 +6,7 @@ object DefaultReads {
   implicit object StringReads extends Reads[String] {
     def reads(js: JsValue) = js match {
       case JsString(str) => Success(str).toValidationNel
-      case _ => Failure(fieldFailure("", "not a string")).toValidationNel
+      case _ => Failure(Fields.fieldFailure("", "not a string")).toValidationNel
     }
   }
 
@@ -14,7 +14,7 @@ object DefaultReads {
     def reads(js: JsValue) = js match {
       case JsNumber(num) =>
         Success(num.toInt).toValidationNel // check non int numbers
-      case _ => Failure(fieldFailure("", "not a string")).toValidationNel
+      case _ => Failure(Fields.fieldFailure("", "not a string")).toValidationNel
     }
   }
 

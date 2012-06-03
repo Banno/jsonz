@@ -6,6 +6,7 @@ import scalaz.syntax.apply._
 package object models {
   import DefaultWrites._
   import DefaultReads._
+  import Fields._
 
   import Arbitrary._
 
@@ -23,7 +24,7 @@ package object models {
   implicit val personArb = Arbitrary {
     for {
       name <- arbitrary[Name]
-      age <- arbitrary[Int]
+      age <- arbitrary[Int] suchThat (i => i >= 0 && i <= 200)
     } yield Person(name, age)
   }
 
@@ -45,8 +46,18 @@ package object models {
       Nil
     }
 
+    def validAge(age: Int): ValidationNEL[String, Int] = {
+      if (age < 0) {
+        Failure("less than zero").toValidationNel
+      } else if (age > 200) {
+        Failure("too old").toValidationNel
+      } else {
+        Success(age).toValidationNel
+      }
+    }
+
     def reads(js: JsValue) =
-      (field[Name]("name", js) |@| field[Int]("age", js)) { Person }
+      (field[Name]("name", js) |@| fieldWithValidation[Int]("age", validAge, js)) { Person }
   }
 
 

@@ -17,4 +17,8 @@ object DefaultReads {
       case _ => Failure(fieldFailure("", "not a string")).toValidationNel
     }
   }
+
+  implicit object JsValueReads extends Reads[JsValue] {
+    def reads(js: JsValue) = Success(js).toValidationNel
+  }
 }

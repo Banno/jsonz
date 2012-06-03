@@ -8,6 +8,10 @@ object DefaultWrites {
   implicit object StringWrites extends Writes[String] {
     def writes(o: String) = JsString(o)
   }
+
+  implicit object JsValueWrites extends Writes[JsValue] {
+    def writes(js: JsValue) = js
+  }
 }
 
 

@@ -10,17 +10,17 @@ object DefaultFormatsSpec extends JsonzSpec {
 
   "Int" ! check(toAndFrom[Int])
 
-  "Short " ! pending
+  "Short " ! check(toAndFrom[Short])
 
-  "Long" ! pending
+  "Long" ! check(toAndFrom[Long])
 
-  "Float" ! pending
+  "Float" ! check(toAndFrom[Float])
 
-  "Double" ! pending
+  "Double" ! check(toAndFrom[Double])
 
-  "BigDecimal" ! pending
+  "BigDecimal" ! pending // check(toAndFrom[BigDecimal]) // arithmetic overflows
 
-  "Boolean" ! pending
+  "Boolean" ! check(toAndFrom[Boolean])
 
   "Map" ! pending
 
@@ -32,6 +32,7 @@ object DefaultFormatsSpec extends JsonzSpec {
 
   "Product" ! pending
 
+  "Failure scenarios" ! pending
 
   def toAndFrom[T : Format : Arbitrary] = Prop.forAll { (o: T) =>
     val wrote = Jsonz.toJson(o)

@@ -14,9 +14,50 @@ trait DefaultReads {
 
   implicit object IntReads extends Reads[Int] {
     def reads(js: JsValue) = js match {
-      case JsNumber(num) =>
-        Success(num.toInt).toValidationNel // check non int numbers
-      case _ => Failure(Fields.fieldFailure("", "not a string")).toValidationNel
+      case JsNumber(num) => Success(num.toInt).toValidationNel
+      case _ => Failure(Fields.fieldFailure("", "not an int")).toValidationNel
+    }
+  }
+
+  implicit object ShortReads extends Reads[Short] {
+    def reads(js: JsValue) = js match {
+      case JsNumber(num) => Success(num.toShort).toValidationNel
+      case _ => Failure(Fields.fieldFailure("", "not a short")).toValidationNel
+    }
+  }
+
+  implicit object LongReads extends Reads[Long] {
+    def reads(js: JsValue) = js match {
+      case JsNumber(num) => Success(num.toLong).toValidationNel
+      case _ => Failure(Fields.fieldFailure("", "not a long")).toValidationNel
+    }
+  }
+
+  implicit object FloatReads extends Reads[Float] {
+    def reads(js: JsValue) = js match {
+      case JsNumber(num) => Success(num.toFloat).toValidationNel
+      case _ => Failure(Fields.fieldFailure("", "not a float")).toValidationNel
+    }
+  }
+
+  implicit object DoubleReads extends Reads[Double] {
+    def reads(js: JsValue) = js match {
+      case JsNumber(num) => Success(num.toDouble).toValidationNel
+      case _ => Failure(Fields.fieldFailure("", "not a short")).toValidationNel
+    }
+  }
+
+  implicit object BigDecimalReads extends Reads[BigDecimal] {
+    def reads(js: JsValue) = js match {
+      case JsNumber(num) => Success(num).toValidationNel
+      case _ => Failure(Fields.fieldFailure("", "not a double")).toValidationNel
+    }
+  }
+
+  implicit object BooleanReads extends Reads[Boolean] {
+    def reads(js: JsValue) = js match {
+      case JsBoolean(bool) => Success(bool).toValidationNel
+      case _ => Failure(Fields.fieldFailure("", "not a boolean")).toValidationNel
     }
   }
 

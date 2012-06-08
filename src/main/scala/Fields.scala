@@ -4,26 +4,24 @@ import scalaz._
 object Fields extends Fields
 
 trait Fields {
-  def field[T: Reads](name: String, js: JsValue): ValidationNEL[JsFieldFailure, T] = js match {
+  import JsFailure._
+
+  def field[T: Reads](name: String, js: JsValue): ValidationNEL[JsFailure, T] = js match {
     case jso: JsObject => {
       val maybeFromJson = jso.get(name) map Jsonz.fromJson[T]
-      maybeFromJson getOrElse fieldFailure(name, "is missing").toValidationNel
+      maybeFromJson getOrElse jsFailureValidationNel(name, "is missing")
     }
-    case _ => fieldFailure("", "is not an object").toValidationNel
+    case _ => jsFailureValidationNel("is not an object")
   }
 
-  def fieldWithValidation[T: Reads](name: String, valid: (T) => ValidationNEL[String, T], js: JsValue): ValidationNEL[JsFieldFailure, T] = js match {
+  def fieldWithValidation[T: Reads](name: String, valid: (T) => ValidationNEL[String, T], js: JsValue): ValidationNEL[JsFailure, T] = js match {
     case jso: JsObject => {
       val maybeFromJson = jso.get(name) map Jsonz.fromJson[T]
-      val fromjson = maybeFromJson getOrElse fieldFailure(name, "is missing").toValidationNel
+      val fromjson = maybeFromJson getOrElse jsFailureValidationNel(name, "is missing")
       fromjson.flatMap { value =>
-        valid(value).fold(failure = (fs => Failure(NonEmptyList(JsFieldFailure(name, fs)))),
-                          success = (x => Success(x)))
+        valid(value).fail.map(fs => jsFailureNel(name, fs)).validation
       }
     }
-    case _ => fieldFailure("", "is not an object").toValidationNel
+    case _ => jsFailureValidationNel("is not an object")
   }
-
-  def fieldFailure(name: String, failure: String) = JsFieldFailure(name, NonEmptyList(failure))
-
 }

@@ -3,7 +3,7 @@ import scalaz.ValidationNEL
 
 object Jsonz {
   def parse(s: String): JsValue = JerksonJson.parse[JsValue](s)
-  def fromJson[T](js: JsValue)(implicit jsr: Reads[T]): ValidationNEL[JsFieldFailure, T] =
+  def fromJson[T](js: JsValue)(implicit jsr: Reads[T]): ValidationNEL[JsFailure, T] =
     jsr.reads(js)
 
   def stringify(js: JsValue): String = JerksonJson.generate(js)

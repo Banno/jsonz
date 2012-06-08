@@ -2,7 +2,9 @@ package jsonz
 import scalaz._
 import scalaz.syntax._
 
-object DefaultReads {
+object DefaultReads extends DefaultReads
+
+trait DefaultReads {
   implicit object StringReads extends Reads[String] {
     def reads(js: JsValue) = js match {
       case JsString(str) => Success(str).toValidationNel

@@ -1,6 +1,8 @@
 package jsonz
 
-object DefaultWrites {
+object DefaultWrites extends DefaultWrites
+
+trait DefaultWrites {
   implicit object IntWrites extends Writes[Int] {
     def writes(o: Int) = JsNumber(o)
   }
@@ -13,5 +15,3 @@ object DefaultWrites {
     def writes(js: JsValue) = js
   }
 }
-
-

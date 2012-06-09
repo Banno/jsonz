@@ -28,7 +28,7 @@ trait Fields {
   }
 
   def fieldWithValidation[T: Reads](name: String, valid: (T) => Validation[String, T], js: JsValue): ValidationNEL[JsFailure, T] =
-    fieldWithValidationNel[T](name, ((t: T) => valid(t).toValidationNel), js)
+    fieldWithValidationNel[T](name, valid andThen (_.toValidationNel), js)
 
   private[this] def groupFieldJsFailures[T](name: String)(jsV: ValidationNEL[JsFailure, T]): ValidationNEL[JsFailure, T] =
     jsV.fail.map(fs => jsFailureNel(name, fs)).validation

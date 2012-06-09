@@ -35,11 +35,14 @@ object ReadWriteJsonSpec extends JsonzSpec {
   }
 
   "be able to test the validity of fields" in {
-    val jsStr = """{"name":{"first":"Luke","last":"Amdor"},"age":-1}"""
+    val jsStr = """{"name":{"first":"123","last":"987"},"age":-1}"""
     val pV: ValidationNEL[JsFailure, Person] = Jsonz.fromJsonStr[Person](jsStr)
     pV must beLike {
       case Failure(failures) =>
-        failures.head must_== JsFieldFailure("age", NonEmptyList(JsFailureStatement("less than zero")))
+        failures.list must contain(JsFieldFailure("age", NonEmptyList(JsFailureStatement("less than zero"))),
+                                   JsFieldFailure("name",
+                                                  NonEmptyList(JsFieldFailure("first", NonEmptyList(JsFailureStatement("not valid chars"))),
+                                                               JsFieldFailure("last", NonEmptyList(JsFailureStatement("not valid chars"))))))
     }
   }
 }

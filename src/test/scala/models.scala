@@ -35,8 +35,15 @@ package object models {
       Nil
     }
 
+    def allAlphaChars(str: String): Validation[String, String] =
+      if (str.forall(_.isLetter)) {
+        Success(str)
+      } else {
+        Failure("not valid chars")
+      }
+
     def reads(js: JsValue) =
-      (field[String]("first", js) |@| field[String]("last", js)) { Name }
+      (fieldWithValidation[String]("first", allAlphaChars, js) |@| fieldWithValidation[String]("last", allAlphaChars, js)) { Name }
   }
 
   implicit val personFormat = new Format[Person] {
@@ -57,7 +64,7 @@ package object models {
     }
 
     def reads(js: JsValue) =
-      (field[Name]("name", js) |@| fieldWithValidation[Int]("age", validAge, js)) { Person }
+      (field[Name]("name", js) |@| fieldWithValidationNel[Int]("age", validAge, js)) { Person }
   }
 
 

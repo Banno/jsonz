@@ -39,8 +39,8 @@ object ReadWriteJsonSpec extends JsonzSpec {
     val pV: ValidationNEL[JsFailure, Person] = Jsonz.fromJsonStr[Person](jsStr)
     pV must beLike {
       case Failure(failures) =>
-        failures.list must contain(JsFieldFailure("age", NonEmptyList(JsFailureStatement("less than zero"))),
-                                   JsFieldFailure("name",
+        failures.list must contain(JsFieldFailure("age", NonEmptyList(JsFailureStatement("less than zero"))))
+        failures.list must contain(JsFieldFailure("name",
                                                   NonEmptyList(JsFieldFailure("first", NonEmptyList(JsFailureStatement("not valid chars"))),
                                                                JsFieldFailure("last", NonEmptyList(JsFailureStatement("not valid chars"))))))
     }

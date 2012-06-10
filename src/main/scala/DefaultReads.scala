@@ -140,6 +140,9 @@ trait DefaultReads {
   }
 
   implicit object JsValueReads extends Reads[JsValue] {
-    def reads(js: JsValue) = Success(js).toValidationNel
+    def reads(js: JsValue) = js match {
+      case null => Success(JsNull).toValidationNel
+      case _ => Success(js).toValidationNel
+    }
   }
 }

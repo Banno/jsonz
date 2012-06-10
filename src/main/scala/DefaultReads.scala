@@ -84,6 +84,13 @@ trait DefaultReads {
     }
   }
 
+  implicit def optionReads[T](implicit tr: Reads[T]): Reads[Option[T]] = new Reads[Option[T]] {
+    def reads(js: JsValue) = js match {
+      case JsNull => Success(None)
+      case jsv => tr.reads(jsv).map(Some.apply)
+    }
+  }
+
   implicit object JsValueReads extends Reads[JsValue] {
     def reads(js: JsValue) = Success(js).toValidationNel
   }

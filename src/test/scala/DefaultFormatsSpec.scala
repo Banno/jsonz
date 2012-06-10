@@ -30,8 +30,8 @@ object DefaultFormatsSpec extends JsonzSpec {
 
   "Seq/List/Traversable" ! pending
 
-  "Option[Int]" ! pending
-  "Option[String]" ! pending
+  "Option[Int]" ! check(toAndFrom[Option[Int]])
+  "Option[String]" ! check(toAndFrom[Option[String]])
   "Option[Map[String, List[String]]]" ! pending
 
   "Failure scenarios" ! pending

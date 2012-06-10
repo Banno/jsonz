@@ -14,6 +14,11 @@ object SerializationSpec extends JsonzSpec {
     }
   }
 
+  "\"null\" should translate to a JsNull not null" ! {
+    // once this passes we should be able to remove the null case in Reads[JsValue]
+    JerksonJson.parse[JsValue]("null") must_== JsNull
+  }.pendingUntilFixed("why is this null?")
+
   "Failure when unparseable" ! pending
 
 }

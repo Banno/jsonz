@@ -22,7 +22,9 @@ object DefaultFormatsSpec extends JsonzSpec {
 
   "Boolean" ! check(toAndFrom[Boolean])
 
-  "Map" ! pending // check(toAndFrom[Map[String, String]])
+  "Map[String, String]" ! check(toAndFrom[Map[String, String]])
+  "Map[String, Int]" ! check(toAndFrom[Map[String, Int]])
+  "Map[String, Map[String, Int]]" ! check(toAndFrom[Map[String, Map[String, Int]]])
 
   "String" ! check(toAndFrom[String])
 
@@ -32,10 +34,7 @@ object DefaultFormatsSpec extends JsonzSpec {
   "Option[String]" ! pending
   "Option[Map[String, List[String]]]" ! pending
 
-  "Pair[String, Boolean]" ! pending
-
-  // Maybe JsArray of size 2 to Pair (icky)
-  "Product" ! pending
+  "Failure scenarios" ! pending
 
   def toAndFrom[T : Format : Arbitrary] = Prop.forAll { (o: T) =>
     val wrote = Jsonz.toJson(o)

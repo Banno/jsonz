@@ -63,6 +63,27 @@ trait DefaultReads {
     }
   }
 
+  implicit def mapReads[V](implicit vr: Reads[V]): Reads[Map[String, V]] = new Reads[Map[String, V]] {
+    import scalaz.std.list._
+    import scalaz.syntax.traverse._
+
+    def reads(js: JsValue) = js match {
+      case JsObject(fields) =>
+
+        val fieldsVs: List[ValidationNEL[JsFailure, (String, V)]] = fields.map { case (k,v) =>
+          vr.reads(v).bimap(fs => jsFailureNel(k, fs),
+                            s => k -> s)
+        }.toList
+
+        val overallV: ValidationNEL[JsFailure, List[(String, V)]] =
+          fieldsVs.sequence[({type l[a] = ValidationNEL[JsFailure, a]})#l, (String, V)]
+
+        overallV.map(_.toMap)
+
+      case _ => jsFailureValidationNel("not an object")
+    }
+  }
+
   implicit object JsValueReads extends Reads[JsValue] {
     def reads(js: JsValue) = Success(js).toValidationNel
   }

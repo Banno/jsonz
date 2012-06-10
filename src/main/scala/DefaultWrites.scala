@@ -38,4 +38,8 @@ trait DefaultWrites {
   implicit object JsValueWrites extends Writes[JsValue] {
     def writes(js: JsValue) = js
   }
+
+  implicit def mapWrites[V](implicit vw: Writes[V]) = new Writes[Map[String, V]] {
+    def writes(m: Map[String, V]) = JsObject(m.mapValues(v => vw.writes(v)).toSeq)
+  }
 }

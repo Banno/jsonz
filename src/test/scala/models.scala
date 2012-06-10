@@ -10,15 +10,16 @@ package object models {
 
   import Arbitrary._
 
-  case class Name(first: String, last: String)
+  case class Name(first: String, middle: Option[String], last: String)
   case class Person(name: Name, age: Int)
-  val person = Person(Name("Luke", "Amdor"), 28)
+  val person = Person(Name("Luke", None, "Amdor"), 28)
 
   implicit val nameArb = Arbitrary {
     for {
       first <- arbitrary[String]
+      middle <- arbitrary[Option[String]]
       last <- arbitrary[String]
-    } yield Name(first, last)
+    } yield Name(first, middle, last)
   }
 
   implicit val personArb = Arbitrary {
@@ -31,6 +32,7 @@ package object models {
   implicit val nameWrites = new Format[Name] {
     def writes(n: Name) = JsObject {
       "first" -> Jsonz.toJson(n.first) ::
+      "middle" -> Jsonz.toJson(n.middle) ::
       "last" -> Jsonz.toJson(n.last) ::
       Nil
     }
@@ -43,7 +45,7 @@ package object models {
       }
 
     def reads(js: JsValue) =
-      (fieldWithValidation[String]("first", allAlphaChars, js) |@| fieldWithValidation[String]("last", allAlphaChars, js)) { Name }
+      (fieldWithValidation[String]("first", allAlphaChars, js) |@| field[Option[String]]("middle",js) |@| fieldWithValidation[String]("last", allAlphaChars, js)) { Name }
   }
 
   implicit val personFormat = new Format[Person] {

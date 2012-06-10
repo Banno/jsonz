@@ -1,6 +1,6 @@
 package jsonz
 import jsonz.models._
-import scalaz.{Success, Failure, ValidationNEL}
+import scalaz.{NonEmptyList, Success, Failure, ValidationNEL}
 import org.scalacheck.{Arbitrary, Prop}
 
 object DefaultFormatsSpec extends JsonzSpec {
@@ -78,6 +78,7 @@ object DefaultFormatsSpec extends JsonzSpec {
     fromJson[Map[String, String]](JsArray(Nil)) must containJsFailureStatement("not an object")
     fromJson[Map[String, String]](JsBoolean(false)) must containJsFailureStatement("not an object")
     fromJson[Map[String, String]](JsNumber(1.23)) must containJsFailureStatement("not an object")
+    fromJson[Map[String, String]](JsObject(Seq("abc" -> JsNumber(123)))) must containJsFieldFailure("abc", "not a string")
   }
 
   "String" ! check(toAndFrom[String])
@@ -131,6 +132,13 @@ object DefaultFormatsSpec extends JsonzSpec {
   def containJsFailureStatement(statment: String) = { (v: ValidationNEL[JsFailure, _]) =>
     v must beLike {
       case Failure(failures) => failures.list must contain(JsFailureStatement(statment))
+    }
+  }
+
+  def containJsFieldFailure(path: String, statement: String) = { (v: ValidationNEL[JsFailure, _]) =>
+    v must beLike {
+      case Failure(failures) =>
+        failures.head must_== JsFieldFailure(path, NonEmptyList(JsFailureStatement(statement)))
     }
   }
 }

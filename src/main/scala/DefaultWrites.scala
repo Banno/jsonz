@@ -50,4 +50,8 @@ trait DefaultWrites {
   implicit def seqWrites[A](implicit aw: Writes[A]) = new Writes[Seq[A]] {
     def writes(as: Seq[A]) = JsArray(as.map(aw.writes).toSeq)
   }
+
+  implicit def arrayWrites[A](implicit aw: Writes[A]) = new Writes[Array[A]] {
+    def writes(as: Array[A]) = JsArray(as.map(aw.writes).toSeq)
+  }
 }

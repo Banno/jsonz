@@ -111,6 +111,22 @@ trait DefaultReads {
     }
   }
 
+  implicit def arrayReads[T](implicit tr: Reads[T], ev: Manifest[T]) = new Reads[Array[T]] {
+    import scalaz.std.list._
+    import scalaz.syntax.traverse._
+
+    def reads(js: JsValue) = js match {
+      case JsArray(elements) =>
+        val elementsVs = elements.map(tr.reads).toList
+        val overallV: ValidationNEL[JsFailure, List[T]] =
+          elementsVs.sequence[({type l[a] = ValidationNEL[JsFailure, a]})#l, T]
+
+        overallV.map(_.toArray)
+
+      case _ => jsFailureValidationNel("not an array")
+    }
+  }
+
   implicit object JsValueReads extends Reads[JsValue] {
     def reads(js: JsValue) = Success(js).toValidationNel
   }

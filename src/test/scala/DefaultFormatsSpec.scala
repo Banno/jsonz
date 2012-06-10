@@ -71,7 +71,16 @@ object DefaultFormatsSpec extends JsonzSpec {
     fromJson[List[String]](JsArray(Seq(JsNumber(1.23), JsBoolean(false)))) must containJsFailureStatement("not a string")
   }
 
-  "Array[String]" ! pending
+  "Array[String]" ! check(toAndFrom[Array[String]])
+  "Array[Int]" ! check(toAndFrom[Array[Int]])
+  "Array failures" ! {
+    fromJson[Array[String]](JsObject(Nil)) must containJsFailureStatement("not an array")
+    fromJson[Array[String]](JsNull) must containJsFailureStatement("not an array")
+    fromJson[Array[String]](JsString("abc")) must containJsFailureStatement("not an array")
+    fromJson[Array[String]](JsBoolean(false)) must containJsFailureStatement("not an array")
+    fromJson[Array[String]](JsNumber(1.23)) must containJsFailureStatement("not an array")
+    fromJson[Array[String]](JsArray(Seq(JsBoolean(false)))) must containJsFailureStatement("not a string")
+  }
 
   "Option[Int]" ! check(toAndFrom[Option[Int]])
   "Option[String]" ! check(toAndFrom[Option[String]])
@@ -83,7 +92,9 @@ object DefaultFormatsSpec extends JsonzSpec {
   def toAndFrom[T : Format : Arbitrary] = Prop.forAll { (o: T) =>
     val wrote = toJson(o)
     val read = fromJson[T](wrote)
-    read must_== Success(o)
+    read must beLike {
+      case Success(r) => r must beEqualTo(o)
+    }
   }
 
   def containJsFailureStatement(statment: String) = { (v: ValidationNEL[JsFailure, _]) =>

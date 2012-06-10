@@ -14,37 +14,49 @@ trait DefaultReads {
     }
   }
 
+  private[this] def tryCatchingToJsFailureValidationNel[T, E <: Exception](msg: String, f: => T)(implicit m: Manifest[E]): ValidationNEL[JsFailure, T] = {
+    import scala.util.control.Exception._
+    val maybeResult = catching(m.erasure).opt(f)
+    maybeResult.map(Success.apply).getOrElse(jsFailureValidationNel(msg))
+  }
+
+
   implicit object IntReads extends Reads[Int] {
     def reads(js: JsValue) = js match {
-      case JsNumber(num) => Success(num.toInt).toValidationNel
+      case JsNumber(num) =>
+        tryCatchingToJsFailureValidationNel[Int, ArithmeticException]("not an int", num.toIntExact)
       case _ => jsFailureValidationNel("not an int")
     }
   }
 
   implicit object ShortReads extends Reads[Short] {
     def reads(js: JsValue) = js match {
-      case JsNumber(num) => Success(num.toShort).toValidationNel
+      case JsNumber(num) =>
+        tryCatchingToJsFailureValidationNel[Short, ArithmeticException]("not a short", num.toShortExact)
       case _ => jsFailureValidationNel("not a short")
     }
   }
 
   implicit object LongReads extends Reads[Long] {
     def reads(js: JsValue) = js match {
-      case JsNumber(num) => Success(num.toLong).toValidationNel
+      case JsNumber(num) =>
+        tryCatchingToJsFailureValidationNel[Long, ArithmeticException]("not a long", num.toLongExact)
       case _ => jsFailureValidationNel("not a long")
     }
   }
 
   implicit object FloatReads extends Reads[Float] {
     def reads(js: JsValue) = js match {
-      case JsNumber(num) => Success(num.toFloat).toValidationNel
+      case JsNumber(num) =>
+        tryCatchingToJsFailureValidationNel[Float, ArithmeticException]("not a float", num.toFloat)
       case _ => jsFailureValidationNel("not a float")
     }
   }
 
   implicit object DoubleReads extends Reads[Double] {
     def reads(js: JsValue) = js match {
-      case JsNumber(num) => Success(num.toDouble).toValidationNel
+      case JsNumber(num) =>
+        tryCatchingToJsFailureValidationNel[Double, ArithmeticException]("not a double", num.toDouble)
       case _ => jsFailureValidationNel("not a double")
     }
   }
@@ -52,7 +64,7 @@ trait DefaultReads {
   implicit object BigDecimalReads extends Reads[BigDecimal] {
     def reads(js: JsValue) = js match {
       case JsNumber(num) => Success(num).toValidationNel
-      case _ => jsFailureValidationNel("not a arbitrary decimal")
+      case _ => jsFailureValidationNel("not an arbitrary decimal")
     }
   }
 

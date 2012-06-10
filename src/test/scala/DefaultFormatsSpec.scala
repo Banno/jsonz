@@ -17,15 +17,46 @@ object DefaultFormatsSpec extends JsonzSpec {
     fromJson[Int](JsArray(Nil)) must containJsFailureStatement("not an int")
     fromJson[Int](JsObject(Nil)) must containJsFailureStatement("not an int")
     fromJson[Int](JsNumber(1.23)) must containJsFailureStatement("not an int")
-  }.pendingUntilFixed("1.23 is not an int")
+  }
 
-  "Short " ! check(toAndFrom[Short])
+  "Short" ! check(toAndFrom[Short])
+  "Short failures" ! {
+    fromJson[Short](JsString("abc")) must containJsFailureStatement("not a short")
+    fromJson[Short](JsNull) must containJsFailureStatement("not a short")
+    fromJson[Short](JsBoolean(true)) must containJsFailureStatement("not a short")
+    fromJson[Short](JsArray(Nil)) must containJsFailureStatement("not a short")
+    fromJson[Short](JsObject(Nil)) must containJsFailureStatement("not a short")
+    fromJson[Short](JsNumber(1.23)) must containJsFailureStatement("not a short")
+    fromJson[Short](JsNumber(32768)) must containJsFailureStatement("not a short")
+  }
 
   "Long" ! check(toAndFrom[Long])
+  "Long failures" ! {
+    fromJson[Long](JsString("abc")) must containJsFailureStatement("not a long")
+    fromJson[Long](JsNull) must containJsFailureStatement("not a long")
+    fromJson[Long](JsBoolean(true)) must containJsFailureStatement("not a long")
+    fromJson[Long](JsArray(Nil)) must containJsFailureStatement("not a long")
+    fromJson[Long](JsObject(Nil)) must containJsFailureStatement("not a long")
+    fromJson[Long](JsNumber(1.23)) must containJsFailureStatement("not a long")
+  }
 
   "Float" ! check(toAndFrom[Float])
+  "Float failures" ! {
+    fromJson[Float](JsString("abc")) must containJsFailureStatement("not a float")
+    fromJson[Float](JsNull) must containJsFailureStatement("not a float")
+    fromJson[Float](JsBoolean(true)) must containJsFailureStatement("not a float")
+    fromJson[Float](JsArray(Nil)) must containJsFailureStatement("not a float")
+    fromJson[Float](JsObject(Nil)) must containJsFailureStatement("not a float")
+  }
 
   "Double" ! check(toAndFrom[Double])
+  "Double failures" ! {
+    fromJson[Double](JsString("abc")) must containJsFailureStatement("not a double")
+    fromJson[Double](JsNull) must containJsFailureStatement("not a double")
+    fromJson[Double](JsBoolean(true)) must containJsFailureStatement("not a double")
+    fromJson[Double](JsArray(Nil)) must containJsFailureStatement("not a double")
+    fromJson[Double](JsObject(Nil)) must containJsFailureStatement("not a double")
+  }
 
   "BigDecimal" ! pending // check(toAndFrom[BigDecimal]) // arithmetic overflows
 

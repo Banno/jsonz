@@ -3,6 +3,8 @@ import jsonz.models._
 import scalaz._
 
 object ReadWriteJsonSpec extends JsonzSpec {
+  "product formats" ! pending
+
   "can write a person" in check { (person: Person) =>
     val js = Jsonz.toJson(person)
     js must beLike {

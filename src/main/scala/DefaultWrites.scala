@@ -46,4 +46,8 @@ trait DefaultWrites {
   implicit def optionWrites[T](implicit tw: Writes[T]) = new Writes[Option[T]] {
     def writes(o: Option[T]) = o.map(tw.writes).getOrElse(JsNull)
   }
+
+  implicit def seqWrites[A](implicit aw: Writes[A]) = new Writes[Seq[A]] {
+    def writes(as: Seq[A]) = JsArray(as.map(aw.writes).toSeq)
+  }
 }

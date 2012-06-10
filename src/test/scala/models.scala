@@ -68,6 +68,14 @@ package object models {
   }
 
 
+  implicit def arbSeq[A : Arbitrary]: Arbitrary[Seq[A]] = Arbitrary {
+    Gen.sized { size =>
+      for {
+        ls <- Gen.listOfN(size, arbitrary[A])
+      } yield ls.toSeq
+    }
+  }
+
 
   implicit lazy val arbJsValue: Arbitrary[JsValue] = Arbitrary {
     val genJsNull = Gen.value(JsNull)

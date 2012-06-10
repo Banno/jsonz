@@ -91,6 +91,26 @@ trait DefaultReads {
     }
   }
 
+  import scala.collection.generic.CanBuildFrom
+  implicit def seqReads[F[_], A](implicit bf: CanBuildFrom[List[_], A, F[A]], ar: Reads[A]) = new Reads[F[A]] {
+    import scalaz.std.list._
+    import scalaz.syntax.traverse._
+
+    def reads(js: JsValue) = js match {
+      case JsArray(elements) =>
+        val elementsVs = elements.map(ar.reads).toList
+        val overallV: ValidationNEL[JsFailure, List[A]] =
+          elementsVs.sequence[({type l[a] = ValidationNEL[JsFailure, a]})#l, A]
+
+        overallV.map { l =>
+          val builder = bf()
+          builder ++= l
+          builder.result
+        }
+      case _ => jsFailureValidationNel("not an array")
+    }
+  }
+
   implicit object JsValueReads extends Reads[JsValue] {
     def reads(js: JsValue) = Success(js).toValidationNel
   }

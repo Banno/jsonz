@@ -3,8 +3,6 @@ import jsonz.models._
 import scalaz._
 
 object ReadWriteJsonSpec extends JsonzSpec {
-  "product formats" ! pending
-
   "can write a person" in check { (person: Person) =>
     val js = Jsonz.toJson(person)
     val middleJson = person.name.middle.map(JsString.apply).getOrElse(JsNull)

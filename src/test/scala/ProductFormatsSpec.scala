@@ -18,8 +18,7 @@ object ProductFormatsSpecs extends JsonzSpec {
   }
 
   "allow for optional fields to not have to be present in the json" ! {
-    // do this via manifest or productFormat2("one", optional("two")) pimping
     val result = fromJson[Testing2](JsObject(Seq("one" -> JsString("hello"))))
-    result must_== Success(Testing2("one", None))
-  }.pendingUntilFixed("need to check for optional fields")
+    result must_== Success(Testing2("hello", None))
+  }
 }

@@ -2,9 +2,8 @@ package jsonz
 import scalaz.Success
 
 object ProductFormatsSpecs extends JsonzSpec {
-  import DefaultFormats._
-  import ProductFormats._
   import Jsonz._
+  import DefaultFormats._
 
   case class Testing2(one: String, two: Option[Int])
   implicit val testing2Format: Format[Testing2] = productFormat2("one", "two")(Testing2)(Testing2.unapply)

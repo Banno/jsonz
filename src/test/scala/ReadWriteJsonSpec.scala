@@ -5,8 +5,10 @@ import scalaz._
 object ReadWriteJsonSpec extends JsonzSpec {
   "can write a person" in check { (person: Person) =>
     val js = Jsonz.toJson(person)
+    val middleJson = person.name.middle.map(JsString.apply).getOrElse(JsNull)
     js must beLike {
       case JsObject(("name", JsObject(("first", JsString(first)) ::
+                                      ("middle", `middleJson`) ::
                                       ("last", JsString(last)) ::
                                       Nil)) ::
                     ("age", JsNumber(age)) :: Nil) =>
@@ -18,11 +20,13 @@ object ReadWriteJsonSpec extends JsonzSpec {
     jsStr must not beEmpty
   }
 
+  "optional field" ! pending
+
   "be able to read raw json to a Person" in {
-    val jsStr = """{"name":{"first":"Luke","last":"Amdor"},"age":28}"""
+    val jsStr = """{"name":{"first":"Luke","middle": null, "last":"Amdor"},"age":28}"""
     val js = Jsonz.parse(jsStr)
     js must beLike {
-      case JsObject(("name", JsObject(("first", JsString(first)) :: ("last", JsString(last)) :: Nil)) ::
+      case JsObject(("name", JsObject(("first", JsString(first)) :: ("middle", JsNull) :: ("last", JsString(last)) :: Nil)) ::
                     ("age", JsNumber(age)) ::
                     Nil) =>
         first must_== "Luke"
@@ -35,11 +39,14 @@ object ReadWriteJsonSpec extends JsonzSpec {
   }
 
   "be able to test the validity of fields" in {
-    val jsStr = """{"name":{"first":"Luke","last":"Amdor"},"age":-1}"""
-    val pV: ValidationNEL[JsFieldFailure, Person] = Jsonz.fromJsonStr[Person](jsStr)
+    val jsStr = """{"name":{"first":"123","middle": null, "last":"987"},"age":-1}"""
+    val pV: ValidationNEL[JsFailure, Person] = Jsonz.fromJsonStr[Person](jsStr)
     pV must beLike {
       case Failure(failures) =>
-        failures.head must_== JsFieldFailure("age", NonEmptyList("less than zero"))
+        failures.list must contain(JsFieldFailure("age", NonEmptyList(JsFailureStatement("less than zero"))))
+        failures.list must contain(JsFieldFailure("name",
+                                                  NonEmptyList(JsFieldFailure("first", NonEmptyList(JsFailureStatement("not valid chars"))),
+                                                               JsFieldFailure("last", NonEmptyList(JsFailureStatement("not valid chars"))))))
     }
   }
 }

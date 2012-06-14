@@ -4,26 +4,33 @@ import scalaz._
 object Fields extends Fields
 
 trait Fields {
-  def field[T: Reads](name: String, js: JsValue): ValidationNEL[JsFieldFailure, T] = js match {
-    case jso: JsObject => {
-      val maybeFromJson = jso.get(name) map Jsonz.fromJson[T]
-      maybeFromJson getOrElse fieldFailure(name, "is missing").toValidationNel
-    }
-    case _ => fieldFailure("", "is not an object").toValidationNel
-  }
+  import JsFailure._
 
-  def fieldWithValidation[T: Reads](name: String, valid: (T) => ValidationNEL[String, T], js: JsValue): ValidationNEL[JsFieldFailure, T] = js match {
+  def field[T](name: String, js: JsValue)(implicit fieldReads: Reads[T], manifest: Manifest[T]): ValidationNEL[JsFailure, T] = js match {
     case jso: JsObject => {
-      val maybeFromJson = jso.get(name) map Jsonz.fromJson[T]
-      val fromjson = maybeFromJson getOrElse fieldFailure(name, "is missing").toValidationNel
-      fromjson.flatMap { value =>
-        valid(value).fold(failure = (fs => Failure(NonEmptyList(JsFieldFailure(name, fs)))),
-                          success = (x => Success(x)))
+      val maybeFromJson = jso.get(name) map fieldReads.reads
+      maybeFromJson.map(groupFieldJsFailures(name)) getOrElse {
+        if (classOf[Option[_]].isAssignableFrom(manifest.erasure)) {
+          Success(None.asInstanceOf[T])
+        } else {
+          jsFailureValidationNel(name, "is missing")
+        }
       }
     }
-    case _ => fieldFailure("", "is not an object").toValidationNel
+    case _ => jsFailureValidationNel("is not an object")
   }
 
-  def fieldFailure(name: String, failure: String) = JsFieldFailure(name, NonEmptyList(failure))
+  def fieldWithValidationNel[T : Reads : Manifest](name: String,
+                                                   valid: (T) => ValidationNEL[String, T],
+                                                   js: JsValue): ValidationNEL[JsFailure, T] =
+    field[T](name, js).flatMap { value =>
+      valid(value).fail.map(fs => jsFailureNel(name, fs.map(jsFailure))).validation
+    }
+
+  def fieldWithValidation[T : Reads : Manifest](name: String, valid: (T) => Validation[String, T], js: JsValue): ValidationNEL[JsFailure, T] =
+    fieldWithValidationNel[T](name, valid andThen (_.toValidationNel), js)
+
+  private[this] def groupFieldJsFailures[T](name: String)(jsV: ValidationNEL[JsFailure, T]): ValidationNEL[JsFailure, T] =
+    jsV.fail.map(fs => jsFailureNel(name, fs)).validation
 
 }

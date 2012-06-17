@@ -1,8 +1,16 @@
 package jsonz
-import scalaz.ValidationNEL
+import com.codahale.jerkson.ParsingException
+import scalaz.{Failure, Success, Validation, ValidationNEL}
 
 object Jsonz {
-  def parse(s: String): JsValue = JerksonJson.parse[JsValue](s)
+  import JsFailure._
+
+  def parse(s: String): Validation[JsFailure, JsValue] = try {
+    Success(JerksonJson.parse[JsValue](s))
+  } catch {
+    case _: ParsingException => Failure(jsFailure("not valid JSON"))
+  }
+
   def fromJson[T](js: JsValue)(implicit jsr: Reads[T]): ValidationNEL[JsFailure, T] =
     jsr.reads(js)
 
@@ -10,8 +18,5 @@ object Jsonz {
   def toJson[T](o: T)(implicit jsw: Writes[T]) = jsw.writes(o)
 
   def toJsonStr[T: Writes](o: T) = stringify(toJson(o))
-  def fromJsonStr[T: Reads](str: String) = fromJson(parse(str))
-  // toJsonBytes
-  // fromJsonBytes
-  // streaming
+  def fromJsonStr[T: Reads](str: String) = parse(str).toValidationNel.flatMap(fromJson[T])
 }

@@ -24,15 +24,15 @@ object ReadWriteJsonSpec extends JsonzSpec {
     val jsStr = """{"name":{"first":"Luke","middle": null, "last":"Amdor"},"age":28}"""
     val js = Jsonz.parse(jsStr)
     js must beLike {
-      case JsObject(("name", JsObject(("first", JsString(first)) :: ("middle", JsNull) :: ("last", JsString(last)) :: Nil)) ::
-                    ("age", JsNumber(age)) ::
-                    Nil) =>
+      case Success(JsObject(("name", JsObject(("first", JsString(first)) :: ("middle", JsNull) :: ("last", JsString(last)) :: Nil)) ::
+                            ("age", JsNumber(age)) ::
+                            Nil)) =>
         first must_== "Luke"
         last must_== "Amdor"
         age must_== 28
     }
 
-    val pV = Jsonz.fromJson[Person](js)
+    val pV = Jsonz.fromJson[Person](js.toOption.get)
     pV must_== Success(person)
   }
 

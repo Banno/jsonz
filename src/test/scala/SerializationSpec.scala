@@ -34,6 +34,16 @@ object SerializationSpec extends JsonzSpec {
     }
   }
 
-  "Failure when unparseable" ! pending
+  "Failure when unparseable" ! {
+    Jsonz.fromJsonStr[String]("not valid json") must beLike {
+      case Failure(failures) =>
+        failures.list must contain(JsFailureStatement("not valid JSON"))
+    }
+  }
+
+  "to/from bytes" ! pending
+  "to/from Input/Output streams"
+  "streaming" ! pending
+
 
 }

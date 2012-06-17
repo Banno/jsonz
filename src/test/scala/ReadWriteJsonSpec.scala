@@ -20,8 +20,6 @@ object ReadWriteJsonSpec extends JsonzSpec {
     jsStr must not beEmpty
   }
 
-  "optional field" ! pending
-
   "be able to read raw json to a Person" in {
     val jsStr = """{"name":{"first":"Luke","middle": null, "last":"Amdor"},"age":28}"""
     val js = Jsonz.parse(jsStr)
@@ -36,6 +34,14 @@ object ReadWriteJsonSpec extends JsonzSpec {
 
     val pV = Jsonz.fromJson[Person](js)
     pV must_== Success(person)
+  }
+
+  "allow an optional field not to have to be there" in {
+    val jsStr = """{"name":{"first":"Luke", "last":"Amdor"},"age":28}"""
+    val pV: ValidationNEL[JsFailure, Person] = Jsonz.fromJsonStr[Person](jsStr)
+    pV must beLike {
+      case Success(person) => person.name.middle must beNone
+    }
   }
 
   "be able to test the validity of fields" in {

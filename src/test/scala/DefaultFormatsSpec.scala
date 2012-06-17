@@ -93,6 +93,7 @@ object DefaultFormatsSpec extends JsonzSpec {
   "List[String]" ! check(toAndFrom[List[String]])
   "List[Int]" ! check(toAndFrom[List[Int]])
   "Seq[String]" ! check(toAndFrom[Seq[String]])
+  "Stream[String]" ! pending
   "List/Seq failures" ! {
     fromJson[List[String]](JsObject(Nil)) must containJsFailureStatement("not an array")
     fromJson[List[String]](JsNull) must containJsFailureStatement("not an array")

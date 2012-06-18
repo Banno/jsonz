@@ -45,10 +45,19 @@ object SerializationSpec extends JsonzSpec {
     read must beSuccess(js)
   }
 
-  "to/from Input/Output streams"
-  "to/from reader"
+  "to/from Input/Output streams" ! check { js: JsValue =>
+    import java.io.{ByteArrayInputStream, ByteArrayOutputStream}
+
+    val out = new ByteArrayOutputStream
+    Jsonz.toJsonOutputStream(js, out)
+
+    val in = new ByteArrayInputStream(out.toByteArray)
+    val read = Jsonz.fromJsonInputStream[JsValue](in)
+
+    read must beSuccess(js)
+  }
+
 
   "streaming" ! pending
-
 
 }

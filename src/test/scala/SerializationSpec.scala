@@ -39,8 +39,15 @@ object SerializationSpec extends JsonzSpec {
     }
   }
 
-  "to/from bytes" ! pending
+  "to/from bytes" ! check { js: JsValue =>
+    val wrote: Array[Byte] = Jsonz.toJsonBytes(js)
+    val read = Jsonz.fromJsonBytes[JsValue](wrote)
+    read must beSuccess(js)
+  }
+
   "to/from Input/Output streams"
+  "to/from reader"
+
   "streaming" ! pending
 
 

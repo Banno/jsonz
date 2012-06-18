@@ -9,9 +9,7 @@ object SerializationSpec extends JsonzSpec {
   "Writes arbitrary JsValue's to and from strings" ! check { js: JsValue =>
     val wrote = Jsonz.toJsonStr(js)
     val read = Jsonz.fromJsonStr[JsValue](wrote)
-    read must beLike {
-      case Success(s) => s must beEqualTo(js)
-    }
+    read must beSuccess(js)
   }
 
   "\"null\" should translate to a JsNull not null" ! {

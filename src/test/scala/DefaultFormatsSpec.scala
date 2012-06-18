@@ -125,21 +125,6 @@ object DefaultFormatsSpec extends JsonzSpec {
   def toAndFrom[T : Format : Arbitrary] = Prop.forAll { (o: T) =>
     val wrote = toJson(o)
     val read = fromJson[T](wrote)
-    read must beLike {
-      case Success(r) => r must beEqualTo(o)
-    }
-  }
-
-  def containJsFailureStatement(statment: String) = { (v: ValidationNEL[JsFailure, _]) =>
-    v must beLike {
-      case Failure(failures) => failures.list must contain(JsFailureStatement(statment))
-    }
-  }
-
-  def containJsFieldFailure(path: String, statement: String) = { (v: ValidationNEL[JsFailure, _]) =>
-    v must beLike {
-      case Failure(failures) =>
-        failures.head must_== JsFieldFailure(path, NonEmptyList(JsFailureStatement(statement)))
-    }
+    read must beSuccess(o)
   }
 }

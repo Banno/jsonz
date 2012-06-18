@@ -47,8 +47,8 @@ trait DefaultWrites {
     def writes(o: Option[T]) = o.map(tw.writes).getOrElse(JsNull)
   }
 
-  implicit def seqWrites[A](implicit aw: Writes[A]) = new Writes[Seq[A]] {
-    def writes(as: Seq[A]) = JsArray(as.map(aw.writes).toSeq)
+  implicit def traversableWrites[A](implicit aw: Writes[A]) = new Writes[Traversable[A]] {
+    def writes(as: Traversable[A]) = JsArray(as.map(aw.writes).toSeq)
   }
 
   implicit def arrayWrites[A](implicit aw: Writes[A]) = new Writes[Array[A]] {

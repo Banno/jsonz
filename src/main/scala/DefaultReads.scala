@@ -104,7 +104,7 @@ trait DefaultReads {
   }
 
   import scala.collection.generic.CanBuildFrom
-  implicit def seqReads[F[_], A](implicit bf: CanBuildFrom[List[_], A, F[A]], ar: Reads[A]) = new Reads[F[A]] {
+  implicit def traversableReads[F[_], A](implicit bf: CanBuildFrom[F[_], A, F[A]], ar: Reads[A]): Reads[F[A]] = new Reads[F[A]] {
     import scalaz.std.list._
     import scalaz.syntax.traverse._
 

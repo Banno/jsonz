@@ -4,7 +4,8 @@ import scalaz.{NonEmptyList, Success, Failure, ValidationNEL}
 import org.scalacheck.{Arbitrary, Prop}
 
 object DefaultFormatsSpec extends JsonzSpec {
-  import DefaultFormats._
+  import DefaultWrites._
+  import DefaultReads._
   import Jsonz._
 
   "JsValue" ! check(toAndFrom[JsValue])
@@ -90,10 +91,12 @@ object DefaultFormatsSpec extends JsonzSpec {
     fromJson[String](JsNumber(1.23)) must containJsFailureStatement("not a string")
   }
 
+  import scala.collection.mutable
   "List[String]" ! check(toAndFrom[List[String]])
   "List[Int]" ! check(toAndFrom[List[Int]])
   "Seq[String]" ! check(toAndFrom[Seq[String]])
-  "Stream[String]" ! pending
+  "Stream[String]" ! check(toAndFrom[Stream[String]])
+  "mutable.Set[String]" ! check(toAndFrom[mutable.Set[String]])
   "List/Seq failures" ! {
     fromJson[List[String]](JsObject(Nil)) must containJsFailureStatement("not an array")
     fromJson[List[String]](JsNull) must containJsFailureStatement("not an array")
@@ -122,7 +125,8 @@ object DefaultFormatsSpec extends JsonzSpec {
     fromJson[Option[Int]](JsString("abc")) must containJsFailureStatement("not an int")
   }
 
-  def toAndFrom[T : Format : Arbitrary] = Prop.forAll { (o: T) =>
+
+  def toAndFrom[T : Reads : Writes : Arbitrary] = Prop.forAll { (o: T) =>
     val wrote = toJson(o)
     val read = fromJson[T](wrote)
     read must beSuccess(o)

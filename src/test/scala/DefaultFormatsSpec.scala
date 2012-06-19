@@ -97,7 +97,7 @@ object DefaultFormatsSpec extends JsonzSpec {
   "Seq[String]" ! check(toAndFrom[Seq[String]])
   "Stream[String]" ! check(toAndFrom[Stream[String]])
   "mutable.Set[String]" ! check(toAndFrom[mutable.Set[String]])
-  "List/Seq failures" ! {
+  "Traversable failures" ! {
     fromJson[List[String]](JsObject(Nil)) must containJsFailureStatement("not an array")
     fromJson[List[String]](JsNull) must containJsFailureStatement("not an array")
     fromJson[List[String]](JsString("abc")) must containJsFailureStatement("not an array")
@@ -105,6 +105,7 @@ object DefaultFormatsSpec extends JsonzSpec {
     fromJson[List[String]](JsNumber(1.23)) must containJsFailureStatement("not an array")
     fromJson[List[String]](JsArray(Seq(JsBoolean(false)))) must containJsFailureStatement("not a string")
     fromJson[List[String]](JsArray(Seq(JsNumber(1.23), JsBoolean(false)))) must containJsFailureStatement("not a string")
+    fromJson[mutable.Set[String]](JsArray(Seq(JsNumber(1.23), JsBoolean(false)))) must containJsFailureStatement("not a string")
   }
 
   "Array[String]" ! check(toAndFrom[Array[String]])
@@ -125,6 +126,16 @@ object DefaultFormatsSpec extends JsonzSpec {
     fromJson[Option[Int]](JsString("abc")) must containJsFailureStatement("not an int")
   }
 
+  "NonEmptyList[Int]" ! check(toAndFrom[NonEmptyList[Int]])
+  "NonEmptyList failures" ! {
+    fromJson[NonEmptyList[String]](JsObject(Nil)) must containJsFailureStatement("not an array")
+    fromJson[NonEmptyList[String]](JsNull) must containJsFailureStatement("not an array")
+    fromJson[NonEmptyList[String]](JsString("abc")) must containJsFailureStatement("not an array")
+    fromJson[NonEmptyList[String]](JsBoolean(false)) must containJsFailureStatement("not an array")
+    fromJson[NonEmptyList[String]](JsNumber(1.23)) must containJsFailureStatement("not an array")
+    fromJson[NonEmptyList[String]](JsArray(Seq(JsBoolean(false)))) must containJsFailureStatement("not a string")
+    fromJson[NonEmptyList[String]](JsArray(Nil)) must containJsFailureStatement("not a non-empty array")
+  }
 
   def toAndFrom[T : Reads : Writes : Arbitrary] = Prop.forAll { (o: T) =>
     val wrote = toJson(o)

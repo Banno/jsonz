@@ -78,6 +78,15 @@ package object models {
     }
   }
 
+  implicit def arbNel[A: Arbitrary]: Arbitrary[NonEmptyList[A]] = Arbitrary {
+    Gen.sized { size =>
+      for {
+        head <- Arbitrary.arbitrary[A]
+        tail <- Gen.listOfN(size, arbitrary[A])
+      } yield NonEmptyList.nel(head, tail)
+    }
+  }
+
 
   implicit lazy val arbJsValue: Arbitrary[JsValue] = Arbitrary {
     val genJsNull = Gen.value(JsNull)

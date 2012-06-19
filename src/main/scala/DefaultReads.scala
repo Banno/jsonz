@@ -139,6 +139,28 @@ trait DefaultReads {
     }
   }
 
+  implicit def nonEmptyListReads[T](implicit tr: Reads[T], ev: Manifest[T]) = new Reads[NonEmptyList[T]] {
+    import scalaz.std.list._
+    import scalaz.syntax.traverse._
+
+    def reads(js: JsValue) = js match {
+      case JsArray(elements) =>
+        val elementsVs = elements.map(tr.reads).toList
+        val overallV: ValidationNEL[JsFailure, List[T]] =
+          elementsVs.sequence[({type l[a] = ValidationNEL[JsFailure, a]})#l, T].flatMap { lst =>
+            if (lst.isEmpty) {
+              jsFailureValidationNel("not a non-empty array")
+            } else {
+              Success(lst)
+            }
+          }
+
+        overallV.map(lst => NonEmptyList.nel(lst.head, lst.tail))
+
+      case _ => jsFailureValidationNel("not an array")
+    }
+  }
+
   implicit object JsValueReads extends Reads[JsValue] {
     def reads(js: JsValue) = js match {
       case null => Success(JsNull).toValidationNel

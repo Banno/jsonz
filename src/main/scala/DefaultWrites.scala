@@ -1,4 +1,5 @@
 package jsonz
+import scalaz.NonEmptyList
 
 object DefaultWrites extends DefaultWrites
 
@@ -53,5 +54,9 @@ trait DefaultWrites {
 
   implicit def arrayWrites[A](implicit aw: Writes[A]) = new Writes[Array[A]] {
     def writes(as: Array[A]) = JsArray(as.map(aw.writes).toSeq)
+  }
+
+  implicit def nonEmptyListWrites[A](implicit aw: Writes[A]) = new Writes[NonEmptyList[A]] {
+    def writes(as: NonEmptyList[A]) = JsArray(as.map(aw.writes).list.toSeq)
   }
 }

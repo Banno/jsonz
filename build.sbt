@@ -1,5 +1,7 @@
 name := "jsonz"
 
+organization := "jsonz"
+
 resolvers += "Coda Hale" at "http://repo.codahale.com"
 
 resolvers += "Sonatype Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots"

@@ -4,8 +4,7 @@ import scalaz.{NonEmptyList, Success, Failure, ValidationNEL}
 import org.scalacheck.{Arbitrary, Prop}
 
 object DefaultFormatsSpec extends JsonzSpec {
-  import DefaultWrites._
-  import DefaultReads._
+  import DefaultFormats._
   import Jsonz._
 
   "JsValue" ! check(toAndFrom[JsValue])

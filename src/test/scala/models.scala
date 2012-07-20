@@ -4,8 +4,7 @@ import scalaz._
 import scalaz.syntax.apply._
 
 package object models {
-  import DefaultWrites._
-  import DefaultReads._
+  import DefaultFormats._
   import Fields._
 
   import Arbitrary._

@@ -86,8 +86,9 @@ trait DefaultFormats {
     def writes(js: JsValue) = js
   }
 
-  implicit def optionFormat[T](implicit tr: Reads[T], tw: Writes[T]): Format[Option[T]] = new Format[Option[T]] {
+  implicit def optionFormat[T](implicit tr: Reads[T], tw: Writes[T], m: Manifest[T]): Format[Option[T]] = new Format[Option[T]] {
     def reads(js: JsValue) = js match {
+      case JsNull if classOf[Option[_]].isAssignableFrom(m.erasure) => tr.reads(JsNull).map(Some.apply)
       case JsNull => Success(None)
       case jsv => tr.reads(jsv).map(Some.apply)
     }

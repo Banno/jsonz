@@ -2,17 +2,21 @@ name := "jsonz"
 
 organization := "jsonz"
 
-resolvers += "Coda Hale" at "http://repo.codahale.com"
+crossScalaVersions := Seq("2.9.1", "2.9.2")
 
-resolvers += "Sonatype Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots"
+resolvers ++= Seq(
+  "Coda Hale" at "http://repo.codahale.com",
+  "Sonatype Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots",
+  "Sonatype Releases" at "https://oss.sonatype.org/content/repositories/releases"
+)
 
 publishTo := Some("Banno Snapshots Repo" at "http://nexus.banno.com/nexus/content/repositories/snapshots")
 
 credentials += Credentials(Path.userHome / ".ivy2" / ".banno_credentials")
 
 libraryDependencies ++= Seq(
-  "com.codahale" %% "jerkson" % "0.5.0",
-  "org.scalaz" %% "scalaz-core" % "7.0-SNAPSHOT"
+  "com.codahale" % "jerkson_2.9.1" % "0.5.0",
+  "org.scalaz" % "scalaz-core_2.9.2" % "7.0.0-M1"
 )
 
 libraryDependencies ++= Seq(

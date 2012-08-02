@@ -5,6 +5,9 @@ object ProductFormatsSpecs extends JsonzSpec {
   import Jsonz._
   import DefaultFormats._
 
+  case class Testing1(one: String)
+  implicit val testing1Format: Format[Testing1] = productFormat1("one")(Testing1)(Testing1.unapply)
+
   case class Testing2(one: String, two: Option[Int])
   implicit val testing2Format: Format[Testing2] = productFormat2("one", "two")(Testing2)(Testing2.unapply)
 
@@ -29,5 +32,10 @@ object ProductFormatsSpecs extends JsonzSpec {
     fromJson[Testing4](JsObject(Seq("one" -> JsString("hello"), "two" -> JsNull))) must_== Success(Testing4("hello", Some(None)))
     fromJson[Testing4](JsObject(Seq("one" -> JsString("hello"), "two" -> JsNumber(2)))) must_== Success(Testing4("hello", Some(Some(2))))
     fromJson[Testing4](JsObject(Seq("one" -> JsString("hello")))) must_== Success(Testing4("hello", None))
+  }
+
+  "allow for product-1's" ! {
+    val result = fromJson[Testing1](JsObject(Seq("one" -> JsString("hello"))))
+    result must_== Success(Testing1("hello"))
   }
 }

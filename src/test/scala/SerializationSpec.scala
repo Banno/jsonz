@@ -26,17 +26,11 @@ object SerializationSpec extends JsonzSpec {
   }
 
   "null on a string must be a failure" ! {
-    Jsonz.fromJsonStr[String]("null") must beLike {
-      case Failure(failures) =>
-        failures.list must contain(JsFailureStatement("not a string"))
-    }
+    Jsonz.fromJsonStr[String]("null") must containFailure(JsFailureStatement("not a string"))
   }
 
   "Failure when unparseable" ! {
-    Jsonz.fromJsonStr[String]("not valid json") must beLike {
-      case Failure(failures) =>
-        failures.list must contain(JsFailureStatement("not valid JSON"))
-    }
+    Jsonz.fromJsonStr[String]("not valid json") must containFailure(JsFailureStatement("not valid JSON"))
   }
 
   "to/from bytes" ! check { js: JsValue =>

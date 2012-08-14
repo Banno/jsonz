@@ -7,6 +7,8 @@ package object models {
   import DefaultFormats._
   import Fields._
 
+  import Validation._
+
   import Arbitrary._
 
   case class Name(first: String, middle: Option[String], last: String)
@@ -38,9 +40,9 @@ package object models {
 
     def allAlphaChars(str: String): Validation[String, String] =
       if (str.forall(_.isLetter)) {
-        Success(str)
+        success(str)
       } else {
-        Failure("not valid chars")
+        failure("not valid chars")
       }
 
     def reads(js: JsValue) =
@@ -56,16 +58,16 @@ package object models {
 
     def validAge(age: Int): ValidationNEL[String, Int] = {
       if (age < 0) {
-        Failure("less than zero").toValidationNel
+        failure("less than zero").toValidationNEL
       } else if (age > 200) {
-        Failure("too old").toValidationNel
+        failure("too old").toValidationNEL
       } else {
-        Success(age).toValidationNel
+        success(age).toValidationNEL
       }
     }
 
     def reads(js: JsValue) =
-      (field[Name]("name", js) |@| fieldWithValidationNel[Int]("age", validAge, js)) { Person }
+      (field[Name]("name", js) |@| fieldWithValidationNEL[Int]("age", validAge, js)) { Person }
   }
 
 

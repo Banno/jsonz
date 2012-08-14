@@ -1,5 +1,6 @@
 package jsonz
 import scalaz._
+import scalaz.Validation._
 import scalaz.syntax._
 
 object DefaultFormats extends DefaultFormats with ProductFormats
@@ -9,7 +10,7 @@ trait DefaultFormats {
 
   implicit object StringFormat extends Format[String] {
     def reads(js: JsValue) = js match {
-      case JsString(str) => Success(str).toValidationNel
+      case JsString(str) => success(str).toValidationNEL
       case _ => jsFailureValidationNel("not a string")
     }
 
@@ -63,7 +64,7 @@ trait DefaultFormats {
 
   implicit object BigDecimalFormat extends Format[BigDecimal] {
     def reads(js: JsValue) = js match {
-      case JsNumber(num) => Success(num).toValidationNel
+      case JsNumber(num) => success(num).toValidationNEL
       case _ => jsFailureValidationNel("not an arbitrary decimal")
     }
     def writes(o: BigDecimal) = JsNumber(o)
@@ -71,7 +72,7 @@ trait DefaultFormats {
 
   implicit object BooleanFormat extends Format[Boolean] {
     def reads(js: JsValue) = js match {
-      case JsBoolean(bool) => Success(bool).toValidationNel
+      case JsBoolean(bool) => success(bool).toValidationNEL
       case _ => jsFailureValidationNel("not a boolean")
     }
     def writes(o: Boolean) = JsBoolean(o)
@@ -79,8 +80,8 @@ trait DefaultFormats {
 
   implicit object JsValueFormat extends Format[JsValue] {
     def reads(js: JsValue) = js match {
-      case null => Success(JsNull).toValidationNel
-      case _ => Success(js).toValidationNel
+      case null => success(JsNull).toValidationNEL
+      case _ => success(js).toValidationNEL
     }
 
     def writes(js: JsValue) = js
@@ -89,7 +90,7 @@ trait DefaultFormats {
   implicit def optionFormat[T](implicit tr: Reads[T], tw: Writes[T], m: Manifest[T]): Format[Option[T]] = new Format[Option[T]] {
     def reads(js: JsValue) = js match {
       case JsNull if classOf[Option[_]].isAssignableFrom(m.erasure) => tr.reads(JsNull).map(Some.apply)
-      case JsNull => Success(None)
+      case JsNull => success(None)
       case jsv => tr.reads(jsv).map(Some.apply)
     }
     def writes(o: Option[T]) = o.map(tw.writes).getOrElse(JsNull)
@@ -165,16 +166,12 @@ trait DefaultFormats {
     def reads(js: JsValue) = js match {
       case JsArray(elements) =>
         val elementsVs = elements.map(tr.reads).toList
-        val overallV: ValidationNEL[JsFailure, List[T]] =
-          elementsVs.sequence[({type l[a] = ValidationNEL[JsFailure, a]})#l, T].flatMap { lst =>
-            if (lst.isEmpty) {
-              jsFailureValidationNel("not a non-empty array")
-            } else {
-              Success(lst)
-            }
-          }
-
-        overallV.map(lst => NonEmptyList.nel(lst.head, lst.tail))
+        val overallV = elementsVs.sequence[({type l[a] = ValidationNEL[JsFailure, a]})#l, T]
+        if (overallV.exists(_.isEmpty)) {
+          jsFailureValidationNel("not a non-empty array")
+        } else {
+          overallV.map(lst => NonEmptyList.nel(lst.head, lst.tail))
+        }
 
       case _ => jsFailureValidationNel("not an array")
     }
@@ -185,7 +182,7 @@ trait DefaultFormats {
   private[this] def tryCatchingToJsFailureValidationNel[T, E <: Exception](msg: String, f: => T)(implicit m: Manifest[E]): ValidationNEL[JsFailure, T] = {
     import scala.util.control.Exception._
     val maybeResult = catching(m.erasure).opt(f)
-    maybeResult.map(Success.apply).getOrElse(jsFailureValidationNel(msg))
+    maybeResult.map(success).getOrElse(jsFailureValidationNel(msg))
   }
 
 }

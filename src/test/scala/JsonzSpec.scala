@@ -13,6 +13,10 @@ trait JsonzSpec extends Specification with ScalaCheck {
     v.swap.map(_.list must contain(a)).getOrElse(failure("not a failure"))
   }
 
+  def haveFailureCount[A, B](n: Int): Matcher[ValidationNEL[A,B]] = { v: ValidationNEL[A,B] =>
+    v.swap.map(_.list must haveSize(n)).getOrElse(failure("not a failure"))
+  }
+
   def containJsFailureStatement[B](statment: String): Matcher[JsonzValidation[B]] = { (v: JsonzValidation[B]) =>
     v must containFailure(JsFailureStatement(statment))
   }

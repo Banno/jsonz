@@ -18,7 +18,8 @@ credentials += Credentials(Path.userHome / ".ivy2" / ".banno_credentials")
 
 libraryDependencies ++= Seq(
   "com.codahale" % "jerkson_2.9.1" % "0.5.0",
-  "org.scalaz" % "scalaz-core_2.9.2" % "7.0.0-M3"
+  "org.scalaz" % "scalaz-core_2.9.2" % "7.0.0-M3",
+  "org.scalaz" % "scalaz-typelevel_2.9.2" % "7.0.0-M3"
 )
 
 libraryDependencies ++= Seq(

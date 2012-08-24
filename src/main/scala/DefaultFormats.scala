@@ -103,13 +103,13 @@ trait DefaultFormats {
     def reads(js: JsValue) = js match {
       case JsObject(fields) =>
 
-        val fieldsVs: List[ValidationNEL[JsFailure, (String, V)]] = fields.map { case (k,v) =>
+        val fieldsVs: List[JsonzValidation[(String, V)]] = fields.map { case (k,v) =>
           vr.reads(v).bimap(fs => jsFailureNel(k, fs),
                             s => k -> s)
         }.toList
 
-        val overallV: ValidationNEL[JsFailure, List[(String, V)]] =
-          fieldsVs.sequence[({type l[a] = ValidationNEL[JsFailure, a]})#l, (String, V)]
+        val overallV: JsonzValidation[List[(String, V)]] =
+          fieldsVs.sequence[({type l[a] = JsonzValidation[a]})#l, (String, V)]
 
         overallV.map(_.toMap)
 
@@ -127,8 +127,8 @@ trait DefaultFormats {
     def reads(js: JsValue) = js match {
       case JsArray(elements) =>
         val elementsVs = elements.map(ar.reads).toList
-        val overallV: ValidationNEL[JsFailure, List[A]] =
-          elementsVs.sequence[({type l[a] = ValidationNEL[JsFailure, a]})#l, A]
+        val overallV: JsonzValidation[List[A]] =
+          elementsVs.sequence[({type l[a] = JsonzValidation[a]})#l, A]
 
         overallV.map { l =>
           val builder = bf()
@@ -148,8 +148,8 @@ trait DefaultFormats {
     def reads(js: JsValue) = js match {
       case JsArray(elements) =>
         val elementsVs = elements.map(tr.reads).toList
-        val overallV: ValidationNEL[JsFailure, List[T]] =
-          elementsVs.sequence[({type l[a] = ValidationNEL[JsFailure, a]})#l, T]
+        val overallV: JsonzValidation[List[T]] =
+          elementsVs.sequence[({type l[a] = JsonzValidation[a]})#l, T]
 
         overallV.map(_.toArray)
 
@@ -166,7 +166,7 @@ trait DefaultFormats {
     def reads(js: JsValue) = js match {
       case JsArray(elements) =>
         val elementsVs = elements.map(tr.reads).toList
-        val overallV = elementsVs.sequence[({type l[a] = ValidationNEL[JsFailure, a]})#l, T]
+        val overallV = elementsVs.sequence[({type l[a] = JsonzValidation[a]})#l, T]
         if (overallV.exists(_.isEmpty)) {
           jsFailureValidationNel("not a non-empty array")
         } else {
@@ -179,7 +179,7 @@ trait DefaultFormats {
     def writes(as: NonEmptyList[T]) = JsArray(as.map(tw.writes).list.toSeq)
   }
 
-  private[this] def tryCatchingToJsFailureValidationNel[T, E <: Exception](msg: String, f: => T)(implicit m: Manifest[E]): ValidationNEL[JsFailure, T] = {
+  private[this] def tryCatchingToJsFailureValidationNel[T, E <: Exception](msg: String, f: => T)(implicit m: Manifest[E]): JsonzValidation[T] = {
     import scala.util.control.Exception._
     val maybeResult = catching(m.erasure).opt(f)
     maybeResult.map(success).getOrElse(jsFailureValidationNel(msg))

@@ -2,7 +2,7 @@ name := "jsonz"
 
 organization := "jsonz"
 
-version := "0.2-SNAPSHOT"
+version := "0.3-SNAPSHOT"
 
 crossScalaVersions := Seq("2.9.1", "2.9.2")
 
@@ -18,7 +18,7 @@ credentials += Credentials(Path.userHome / ".ivy2" / ".banno_credentials")
 
 libraryDependencies ++= Seq(
   "com.codahale" % "jerkson_2.9.1" % "0.5.0",
-  "org.scalaz" % "scalaz-core_2.9.2" % "7.0.0-M2"
+  "org.scalaz" % "scalaz-core_2.9.2" % "7.0.0-M3"
 )
 
 libraryDependencies ++= Seq(

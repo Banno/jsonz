@@ -7,15 +7,15 @@ object Jsonz {
   import Validation._
 
   def toJsonStr[T: Writes](o: T) = stringify(toJson(o))
-  def fromJsonStr[T: Reads](str: String) = parse(str).bind(fromJson[T])
+  def fromJsonStr[T: Reads](str: String) = parse(str).flatMap(fromJson[T])
 
   def toJsonBytes[T: Writes](o: T) = stringify(toJson(o)).getBytes("UTF-8")
-  def fromJsonBytes[T: Reads](bytes: Array[Byte]) = parse(bytes).bind(fromJson[T])
+  def fromJsonBytes[T: Reads](bytes: Array[Byte]) = parse(bytes).flatMap(fromJson[T])
 
   import java.io.{InputStream, OutputStream}
   def toJsonOutputStream[T: Writes](o: T, out: OutputStream) =
     JerksonJson.generate(toJson(o), out)
-  def fromJsonInputStream[T: Reads](in: InputStream) = parse(in).bind(fromJson[T])
+  def fromJsonInputStream[T: Reads](in: InputStream) = parse(in).flatMap(fromJson[T])
 
   def toJson[T](o: T)(implicit jsw: Writes[T]) = jsw.writes(o)
   def fromJson[T](js: JsValue)(implicit jsr: Reads[T]): ValidationNEL[JsFailure, T] =

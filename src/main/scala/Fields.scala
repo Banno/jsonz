@@ -24,7 +24,7 @@ trait Fields {
   def fieldWithValidationNEL[T : Reads : Manifest](name: String,
                                                    valid: (T) => ValidationNEL[String, T],
                                                    js: JsValue): ValidationNEL[JsFailure, T] =
-    field[T](name, js).bind { value =>
+    field[T](name, js).flatMap { value =>
       valid(value).bimap(fs => jsFailureNel(name, fs.map(jsFailure)), identity)
     }
 

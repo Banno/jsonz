@@ -1,12 +1,24 @@
 name := "jsonz"
 
-resolvers += "Coda Hale" at "http://repo.codahale.com"
+organization := "jsonz"
 
-resolvers += "Sonatype Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots"
+version := "0.3-SNAPSHOT"
+
+crossScalaVersions := Seq("2.9.1", "2.9.2")
+
+resolvers ++= Seq(
+  "Coda Hale" at "http://repo.codahale.com",
+  "Sonatype Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots",
+  "Sonatype Releases" at "https://oss.sonatype.org/content/repositories/releases"
+)
+
+publishTo := Some("Banno Snapshots Repo" at "http://nexus.banno.com/nexus/content/repositories/snapshots")
+
+credentials += Credentials(Path.userHome / ".ivy2" / ".banno_credentials")
 
 libraryDependencies ++= Seq(
-  "com.codahale" %% "jerkson" % "0.5.0",
-  "org.scalaz" %% "scalaz-core" % "7.0-SNAPSHOT"
+  "com.codahale" % "jerkson_2.9.1" % "0.5.0",
+  "org.scalaz" % "scalaz-core_2.9.2" % "7.0.0-M3"
 )
 
 libraryDependencies ++= Seq(
@@ -16,7 +28,7 @@ libraryDependencies ++= Seq(
 
 libraryDependencies ++= Seq(
   "com.google.caliper" % "caliper" % "0.5-rc1",
-  "net.debasishg" %% "sjson" % "0.15" % "test"
+  "net.debasishg" % "sjson_2.9.1" % "0.15" % "test"
 )
 
 fork in run := true
@@ -34,3 +46,5 @@ onLoad in Global ~= { previous => state =>
     }
   }
 }
+
+// scalacOptions += "-Xlog-implicits"

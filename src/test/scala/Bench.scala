@@ -70,22 +70,10 @@ class SjsonBench extends SimpleBenchmark with SimpleRepeat {
 class JsonzBench extends SimpleBenchmark with SimpleRepeat {
   import jsonz._
   import Jsonz._
-  import Fields._
-  import DefaultReads._
-  import DefaultWrites._
+  import DefaultFormats._
 
-  implicit val SimpleModelFormat = new Format[SimpleModel] {
-    import scalaz.syntax.apply._
-
-    def writes(sm: SimpleModel) = JsObject {
-      "first" -> Jsonz.toJson(sm.first) ::
-      "second" -> Jsonz.toJson(sm.second) ::
-      Nil
-    }
-
-    def reads(js: JsValue) =
-      (field[String]("first", js) |@| field[String]("second", js)) { SimpleModel }
-  }
+  implicit val SimpleModelFormat =
+    productFormat2("first", "second")(SimpleModel.apply)(SimpleModel.unapply)
 
   val jsStr = """{"first" : "111", "second": "222"}"""
 

@@ -1,11 +1,20 @@
 package jsonz.bench
 import com.google.caliper.SimpleBenchmark
 
-case class SimpleModel(first: String, second: String)
+case class NestedModel(nested1: List[Int],
+                       nested2: Option[String])
+
+case class SimpleModel(first: String,
+                       second: String,
+                       third: Option[NestedModel],
+                       fourth:  Option[Int])
 
 object models {
-  // TOOD: make a little bit more complicated
-  val simple = SimpleModel(first = "111", second = "222")
+  val simple = SimpleModel(first  = "111",
+                           second = "222",
+                           third  = Some(NestedModel(List(1,2,3), Some("two"))),
+                           fourth = Some(4))
+  val simpleJsonStr =  """{"first" : "111", "second": "222", "third": {"nested1": [1,2,3], "nested2": null}, "fourth": 9}"""
 }
 
 // sjson DONE
@@ -53,18 +62,28 @@ class SjsonBench extends SimpleBenchmark with SimpleRepeat {
   import DefaultProtocol._
   import JsonSerialization._
 
-  implicit val SimpleModelFormat = asProduct2("first", "second")(SimpleModel)(SimpleModel.unapply(_).get)
+  implicit val NestedModelFormat =
+    asProduct2("nested1", "nested2")(NestedModel)(NestedModel.unapply(_).get)
+  implicit val SimpleModelFormat =
+    asProduct4("first", "second", "third", "fourth")(SimpleModel)(SimpleModel.unapply(_).get)
 
-  val jsStr = """{"first" : "111", "second": "222"}"""
-  val js = Js(jsStr)
+  val js = Js(models.simpleJsonStr)
 
   def timeSerializeStr(reps: Int) = repeat(reps)(tojson(models.simple).toString)
-  def timeDeSerializeStr(reps: Int) = repeat(reps)(fromjson[SimpleModel](Js(jsStr)))
+  def timeDeSerializeStr(reps: Int) = repeat(reps)(fromjson[SimpleModel](Js(models.simpleJsonStr)))
   def timeDeSerializeJsValue(reps: Int) = repeat(reps)(fromjson[SimpleModel](js))
 
-  def timeJsParseStr(reps: Int) = repeat(reps)(Js(jsStr))
+  def timeJsParseStr(reps: Int) = repeat(reps)(Js(models.simpleJsonStr))
 
   def timeToAndFromStr(reps: Int) = repeat(reps)(fromjson[SimpleModel](Js(tojson(models.simple).toString)))
+}
+
+class JerksonBench extends SimpleBenchmark with SimpleRepeat {
+  import com.codahale.jerkson.Json._
+
+  def timeSerializeStr(reps: Int) = repeat(reps)(generate(models.simple))
+  def timeDeSerializeStr(reps: Int) = repeat(reps)(parse[SimpleModel](models.simpleJsonStr))
+  def timeToAndFromStr(reps: Int) = repeat(reps)(parse[SimpleModel](generate(models.simple)))
 }
 
 class JsonzBench extends SimpleBenchmark with SimpleRepeat {
@@ -72,22 +91,12 @@ class JsonzBench extends SimpleBenchmark with SimpleRepeat {
   import Jsonz._
   import DefaultFormats._
 
+  implicit val NestedModelFormat =
+    productFormat2("nested1", "nested2")(NestedModel.apply)(NestedModel.unapply)
   implicit val SimpleModelFormat =
-    productFormat2("first", "second")(SimpleModel.apply)(SimpleModel.unapply)
-
-  val jsStr = """{"first" : "111", "second": "222"}"""
+    productFormat4("first", "second", "third", "fourth")(SimpleModel.apply)(SimpleModel.unapply)
 
   def timeSerializeStr(reps: Int) = repeat(reps)(toJsonStr(bench.models.simple))
-  def timeDeSerializeStr(reps: Int) = repeat(reps)(fromJsonStr[SimpleModel](jsStr))
+  def timeDeSerializeStr(reps: Int) = repeat(reps)(fromJsonStr[SimpleModel](bench.models.simpleJsonStr))
   def timeToAndFromStr(reps: Int) = repeat(reps)(fromJsonStr[SimpleModel](toJsonStr(bench.models.simple)))
-}
-
-class JerksonBench extends SimpleBenchmark with SimpleRepeat {
-  import com.codahale.jerkson.Json._
-
-  val jsStr = """{"first" : "111", "second": "222"}"""
-
-  def timeSerializeStr(reps: Int) = repeat(reps)(generate(models.simple))
-  def timeDeSerializeStr(reps: Int) = repeat(reps)(parse[SimpleModel](jsStr))
-  def timeToAndFromStr(reps: Int) = repeat(reps)(parse[SimpleModel](generate(models.simple)))
 }

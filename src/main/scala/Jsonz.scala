@@ -18,7 +18,7 @@ object Jsonz {
   def fromJsonInputStream[T: Reads](in: InputStream) = parse(in).flatMap(fromJson[T])
 
   def toJson[T](o: T)(implicit jsw: Writes[T]) = jsw.writes(o)
-  def fromJson[T](js: JsValue)(implicit jsr: Reads[T]): ValidationNEL[JsFailure, T] =
+  def fromJson[T](js: JsValue)(implicit jsr: Reads[T]): JsonzValidation[T] =
     jsr.reads(js)
 
   def parse(s: String) = tryToParse(JerksonJson.parse[JsValue](s))
@@ -26,7 +26,7 @@ object Jsonz {
   def parse(in: InputStream) = tryToParse(JerksonJson.parse[JsValue](in))
   def stringify(js: JsValue): String = JerksonJson.generate(js)
 
-  private[this] def tryToParse(f: => JsValue): ValidationNEL[JsFailure, JsValue] = try {
+  private[this] def tryToParse(f: => JsValue): JsonzValidation[JsValue] = try {
     success(f).toValidationNEL
   } catch {
     case _: ParsingException => jsFailureValidationNel("not valid JSON")

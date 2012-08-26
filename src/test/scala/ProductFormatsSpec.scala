@@ -34,6 +34,13 @@ object ProductFormatsSpecs extends JsonzSpec {
     fromJson[Testing4](JsObject(Seq("one" -> JsString("hello")))) must beSuccess(Testing4("hello", None))
   }
 
+  "collect errors" ! {
+    val v = fromJson[Testing3](JsObject(Nil))
+    v must haveFailureCount(2)
+    v must containJsFieldFailure("one", "is missing")
+    v must containJsFieldFailure("three", "is missing")
+  }
+
   "allow for product-1's" ! {
     val result = fromJson[Testing1](JsObject(Seq("one" -> JsString("hello"))))
     result must beSuccess(Testing1("hello"))

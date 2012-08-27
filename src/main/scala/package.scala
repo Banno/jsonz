@@ -1,3 +1,3 @@
 package object jsonz {
-  type JsonzValidation[X] = scalaz.ValidationNEL[JsFailure, X]
+  type JsonzValidation[+X] = scalaz.ValidationNEL[JsFailure, X]
 }

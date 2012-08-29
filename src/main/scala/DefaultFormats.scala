@@ -3,7 +3,7 @@ import scalaz._
 import scalaz.Validation._
 import scalaz.syntax._
 
-object DefaultFormats extends DefaultFormats with ProductFormats
+object DefaultFormats extends DefaultFormats with ProductFormats with LazyFormat
 
 trait DefaultFormats {
   import JsFailure._

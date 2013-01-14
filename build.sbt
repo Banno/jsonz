@@ -9,7 +9,9 @@ crossScalaVersions := Seq("2.9.1", "2.9.2")
 resolvers ++= Seq(
   "Coda Hale" at "http://repo.codahale.com",
   "Sonatype Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots",
-  "Sonatype Releases" at "https://oss.sonatype.org/content/repositories/releases"
+  "Sonatype Releases" at "https://oss.sonatype.org/content/repositories/releases",
+  "spray.io" at "http://repo.spray.io/",
+  "Typesafe Releases" at "http://repo.typesafe.com/typesafe/releases/"
 )
 
 publishTo := Some("Banno Snapshots Repo" at "http://nexus.banno.com/nexus/content/repositories/snapshots")
@@ -20,6 +22,12 @@ libraryDependencies ++= Seq(
   "com.codahale" % "jerkson_2.9.1" % "0.5.0",
   "org.scalaz" % "scalaz-core_2.9.2" % "7.0.0-M3",
   "org.scalaz" % "scalaz-typelevel_2.9.2" % "7.0.0-M3"
+)
+
+// spray support
+libraryDependencies ++= Seq(
+  "io.spray" % "spray-httpx" % "1.0-M7" % "provided",
+  "com.typesafe.akka" % "akka-actor" % "2.0.5" % "provided"
 )
 
 libraryDependencies ++= Seq(

@@ -117,4 +117,20 @@ package object models {
     }
   }
 
+  implicit lazy val arbJsFailure: Arbitrary[JsFailure] = Arbitrary {
+    def genJsFailureStatement = for {
+      s <- Arbitrary.arbitrary[String]
+    } yield JsFailureStatement(s)
+
+    def genJsFieldFailure = for {
+      field <- arbitrary[String]
+      n  <- Gen.choose(1, 4)
+      failures <- Gen.listOfN(n, arbitrary[JsFailure])
+    } yield JsFieldFailure(field, NonEmptyList.nel(failures.head, failures.tail))
+
+    Gen.frequency(
+      (4, genJsFailureStatement),
+      (1, genJsFieldFailure)
+    )
+  }
 }

@@ -185,4 +185,18 @@ trait DefaultFormats {
     maybeResult.map(success).getOrElse(jsFailureValidationNel(msg))
   }
 
+  implicit lazy val jsFailureFormat: Format[JsFailure] = new Format[JsFailure] {
+    lazy val jsFieldFailureFormat = ProductFormats.productFormat2("field", "failures")(JsFieldFailure.apply)(JsFieldFailure.unapply)
+
+    def reads(jsv: JsValue) = jsv match {
+      case JsString(str) => Success(JsFailureStatement(str))
+      case jso: JsObject => jsFieldFailureFormat.reads(jso)
+      case _             => jsFailureValidationNel("not a failure")
+    }
+
+    def writes(failure: JsFailure) = failure match {
+      case JsFailureStatement(statement) => JsString(statement)
+      case jff: JsFieldFailure           => jsFieldFailureFormat.writes(jff)
+    }    
+  }
 }

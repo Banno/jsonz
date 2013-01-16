@@ -9,9 +9,18 @@ package object spray {
       ctx.marshalTo(HttpBody(contentType, Jsonz.toJsonBytes(value)))
     }
 
+
   implicit def readsMarshaller[T : Reads]: Unmarshaller[T] =
-    Unmarshaller[T](MediaTypes.`application/json`) {
-      case body: HttpBody =>
-        Jsonz.fromJsonStr(body.asString).toEither.right.get
+    new SimpleUnmarshaller[T] {
+      val canUnmarshalFrom: Seq[ContentTypeRange] = Seq(MediaTypes.`application/json`)
+
+      def unmarshal(entity: HttpEntity) = entity match {
+        case body: HttpBody =>
+          val v = Jsonz.fromJsonBytes(body.buffer)
+          import DefaultFormats.nonEmptyListFormat
+          import DefaultFormats.jsFailureFormat
+          v.toEither.left.map(failures => MalformedContent(Jsonz.toJsonStr(failures)))
+        case EmptyEntity => Left(ContentExpected)
+      }
     }
 }

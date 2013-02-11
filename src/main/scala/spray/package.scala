@@ -10,7 +10,7 @@ package object spray {
     }
 
 
-  implicit def readsMarshaller[T : Reads]: Unmarshaller[T] =
+  implicit def readsUnmarshaller[T : Reads]: Unmarshaller[T] =
     new SimpleUnmarshaller[T] {
       val canUnmarshalFrom: Seq[ContentTypeRange] = Seq(MediaTypes.`application/json`)
 

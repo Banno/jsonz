@@ -136,6 +136,8 @@ object DefaultFormatsSpec extends JsonzSpec {
     fromJson[NonEmptyList[String]](JsArray(Nil)) must containJsFailureStatement("not a non-empty array")
   }
 
+  "NonEmptyList[JsFailure]" ! check(toAndFrom[NonEmptyList[JsFailure]])
+
   def toAndFrom[T : Reads : Writes : Arbitrary] = Prop.forAll { (o: T) =>
     val wrote = toJson(o)
     val read = fromJson[T](wrote)

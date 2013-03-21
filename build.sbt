@@ -31,13 +31,13 @@ libraryDependencies ++= Seq(
 
 // spray support
 libraryDependencies ++= Seq(
-  "io.spray" % "spray-httpx" % "1.0-M7" % "provided",
-  "com.typesafe.akka" % "akka-actor" % "2.0.5" % "provided"
+  "io.spray" % "spray-httpx" % "1.1-M7" % "provided",
+  "com.typesafe.akka" %% "akka-actor" % "2.1.2" % "provided"
 )
 
 libraryDependencies ++= Seq(
   "org.specs2" %% "specs2" % "1.12.3" % "test",
-  "org.scalacheck" % "scalacheck_2.10.0-RC5" % "1.10.0" % "test"
+  "org.scalacheck" %% "scalacheck" % "1.10.0" % "test"
 )
 
 // scalacOptions += "-Xlog-implicits"

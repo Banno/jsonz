@@ -2,17 +2,18 @@ package jsonz
 
 // Originally from the Play Framework 2.0
 
-import org.codehaus.jackson.{ JsonGenerator, JsonToken, JsonParser }
-import org.codehaus.jackson.`type`.JavaType
-import org.codehaus.jackson.map._
-import org.codehaus.jackson.map.annotate.JsonCachable
-import org.codehaus.jackson.map.`type`.{ TypeFactory, ArrayType }
+import com.fasterxml.jackson.core.{ JsonGenerator, JsonToken, JsonParser }
+import com.fasterxml.jackson.databind._
+import com.fasterxml.jackson.databind.ser.Serializers
+import com.fasterxml.jackson.databind.deser.Deserializers
+//import com.fasterxml.jackson.databind.annotation.JsonCachable
+import com.fasterxml.jackson.databind.`type`.{ TypeFactory, ArrayType }
 
 import scala.annotation.tailrec
 
 // -- Serializers.
 
-@JsonCachable
+//@JsonCachable
 private[jsonz] class JsValueSerializer extends JsonSerializer[JsValue] {
 
   def serialize(value: JsValue, json: JsonGenerator, provider: SerializerProvider) {
@@ -57,7 +58,7 @@ private[jsonz] case class ReadingMap(content: List[(String, JsValue)]) extends D
 
 }
 
-@JsonCachable
+//@JsonCachable
 private[jsonz] class JsValueDeserializer(factory: TypeFactory, klass: Class[_]) extends JsonDeserializer[Object] {
   def deserialize(jp: JsonParser, ctxt: DeserializationContext): JsValue = {
     val value = deserialize(jp, ctxt, List())
@@ -132,9 +133,7 @@ private[jsonz] class JsValueDeserializer(factory: TypeFactory, klass: Class[_]) 
 }
 
 private[jsonz] class JsonzDeserializers(classLoader: ClassLoader) extends Deserializers.Base {
-  override def findBeanDeserializer(javaType: JavaType, config: DeserializationConfig,
-    provider: DeserializerProvider, beanDesc: BeanDescription,
-    property: BeanProperty) = {
+  override def findBeanDeserializer(javaType: JavaType, config: DeserializationConfig, beanDesc: BeanDescription) = {
     val klass = javaType.getRawClass
     if (classOf[JsValue].isAssignableFrom(klass) || klass == JsNull.getClass) {
       new JsValueDeserializer(config.getTypeFactory, klass)
@@ -144,7 +143,7 @@ private[jsonz] class JsonzDeserializers(classLoader: ClassLoader) extends Deseri
 }
 
 private[jsonz] class JsonzSerializers extends Serializers.Base {
-  override def findSerializer(config: SerializationConfig, javaType: JavaType, beanDesc: BeanDescription, beanProp: BeanProperty) = {
+  override def findSerializer(config: SerializationConfig, javaType: JavaType, beanDesc: BeanDescription) = {
     val ser: Object = if (classOf[JsValue].isAssignableFrom(beanDesc.getBeanClass)) {
       new JsValueSerializer
     } else {
@@ -155,9 +154,9 @@ private[jsonz] class JsonzSerializers extends Serializers.Base {
 }
 
 private[jsonz] object JerksonJson extends com.codahale.jerkson.Json {
-  import org.codehaus.jackson.Version
-  import org.codehaus.jackson.map.module.SimpleModule
-  import org.codehaus.jackson.map.Module.SetupContext
+  import com.fasterxml.jackson.core.Version
+  import com.fasterxml.jackson.databind.module.SimpleModule
+  import com.fasterxml.jackson.databind.Module.SetupContext
 
   object module extends SimpleModule("Jsonz", Version.unknownVersion()) {
     override def setupModule(context: SetupContext) {

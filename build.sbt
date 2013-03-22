@@ -21,12 +21,7 @@ credentials += Credentials(Path.userHome / ".ivy2" / ".banno_credentials")
 libraryDependencies ++= Seq(
   "org.scalaz" % "scalaz-core_2.10" % "7.0.0-M8",
   "org.scalaz" % "scalaz-typelevel_2.10" % "7.0.0-M8",
-  "jerkson" % "jerkson_2.10" % "0.1-SNAPSHOT"
-)
-
-libraryDependencies ++= Seq(
-  "com.fasterxml.jackson.core" % "jackson-core" % "2.1.1",
-  "com.fasterxml.jackson.core" % "jackson-databind" % "2.1.1"
+  "com.fasterxml.jackson.module" %% "jackson-module-scala" % "2.1.3"
 )
 
 // spray support

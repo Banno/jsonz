@@ -1,5 +1,4 @@
 package jsonz
-import com.codahale.jerkson.ParsingException
 import scalaz.{Failure, Success, Validation, ValidationNEL}
 
 object Jsonz {
@@ -14,17 +13,17 @@ object Jsonz {
 
   import java.io.{InputStream, OutputStream}
   def toJsonOutputStream[T: Writes](o: T, out: OutputStream) =
-    JerksonJson.generate(toJson(o), out)
+    JacksonJson.generate(toJson(o), out)
   def fromJsonInputStream[T: Reads](in: InputStream) = parse(in).flatMap(fromJson[T])
 
   def toJson[T](o: T)(implicit jsw: Writes[T]) = jsw.writes(o)
   def fromJson[T](js: JsValue)(implicit jsr: Reads[T]): JsonzValidation[T] =
     jsr.reads(js)
 
-  def parse(s: String) = tryToParse(JerksonJson.parse[JsValue](s))
-  def parse(bytes: Array[Byte]) = tryToParse(JerksonJson.parse[JsValue](bytes))
-  def parse(in: InputStream) = tryToParse(JerksonJson.parse[JsValue](in))
-  def stringify(js: JsValue): String = JerksonJson.generate(js)
+  def parse(s: String) = tryToParse(JacksonJson.parse[JsValue](s))
+  def parse(bytes: Array[Byte]) = tryToParse(JacksonJson.parse[JsValue](bytes))
+  def parse(in: InputStream) = tryToParse(JacksonJson.parse[JsValue](in))
+  def stringify(js: JsValue): String = JacksonJson.generate(js)
 
   private[this] def tryToParse(f: => JsValue): JsonzValidation[JsValue] = try {
     success(f).toValidationNEL

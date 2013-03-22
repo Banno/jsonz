@@ -2,18 +2,19 @@ package jsonz
 
 // Originally from the Play Framework 2.0
 
-import com.fasterxml.jackson.core.{ JsonGenerator, JsonToken, JsonParser }
+import com.fasterxml.jackson.core.{JsonGenerator, JsonToken, JsonParser, Version}
 import com.fasterxml.jackson.databind._
+import com.fasterxml.jackson.databind.`type`._
 import com.fasterxml.jackson.databind.ser.Serializers
 import com.fasterxml.jackson.databind.deser.Deserializers
-//import com.fasterxml.jackson.databind.annotation.JsonCachable
-import com.fasterxml.jackson.databind.`type`.{ TypeFactory, ArrayType }
+import com.fasterxml.jackson.databind.module.SimpleModule
+import com.fasterxml.jackson.databind.Module.SetupContext
+import com.fasterxml.jackson.module.scala.DefaultScalaModule
 
 import scala.annotation.tailrec
 
 // -- Serializers.
 
-//@JsonCachable
 private[jsonz] class JsValueSerializer extends JsonSerializer[JsValue] {
 
   def serialize(value: JsValue, json: JsonGenerator, provider: SerializerProvider) {
@@ -153,17 +154,124 @@ private[jsonz] class JsonzSerializers extends Serializers.Base {
   }
 }
 
-private[jsonz] object JerksonJson extends com.codahale.jerkson.Json {
-  import com.fasterxml.jackson.core.Version
-  import com.fasterxml.jackson.databind.module.SimpleModule
-  import com.fasterxml.jackson.databind.Module.SetupContext
 
-  object module extends SimpleModule("Jsonz", Version.unknownVersion()) {
-    override def setupModule(context: SetupContext) {
-      context.addDeserializers(new JsonzDeserializers(classLoader))
-      context.addSerializers(new JsonzSerializers)
+
+private[jsonz] object JsonzModule extends SimpleModule("Jsonz", Version.unknownVersion()) {
+  protected val classLoader = Thread.currentThread().getContextClassLoader
+  override def setupModule(context: SetupContext) {
+    context.addDeserializers(new JsonzDeserializers(classLoader))
+    context.addSerializers(new JsonzSerializers)
+  }
+}
+
+private[jsonz] object JacksonJson extends Factory with Generator with Parser {
+
+  protected val mapper = new ObjectMapper
+  protected val factory = new MappingJsonFactory(mapper)
+
+  mapper.registerModule(DefaultScalaModule)
+  mapper.registerModule(JsonzModule)
+
+  factory.enable(JsonGenerator.Feature.AUTO_CLOSE_JSON_CONTENT)
+  factory.enable(JsonGenerator.Feature.AUTO_CLOSE_TARGET)
+  factory.enable(JsonGenerator.Feature.QUOTE_FIELD_NAMES)
+  factory.enable(JsonParser.Feature.ALLOW_COMMENTS)
+  factory.enable(JsonParser.Feature.AUTO_CLOSE_SOURCE)
+}
+
+// Originally from Jerkson.
+
+private[jsonz] trait Factory {
+  protected def mapper: ObjectMapper
+  protected def factory: MappingJsonFactory
+}
+
+private[jsonz] trait Generator extends Factory {
+  import java.io.{StringWriter, OutputStream, File, Writer}
+  import com.fasterxml.jackson.core.JsonEncoding
+
+  def generate[A](obj: A): String = {
+    val writer = new StringWriter
+    generate(obj, writer)
+    writer.toString
+  }
+
+  def generate[A](obj: A, output: Writer) {
+    generate(obj, factory.createJsonGenerator(output))
+  }
+
+  def generate[A](obj: A, output: OutputStream) {
+    generate(obj, factory.createJsonGenerator(output, JsonEncoding.UTF8))
+  }
+
+  def generate[A](obj: A, output: File) {
+    generate(obj, factory.createJsonGenerator(output, JsonEncoding.UTF8))
+  }
+
+  private def generate[A](obj: A, generator: JsonGenerator) {
+    generator.writeObject(obj)
+    generator.close()
+  }
+}
+
+
+private[jsonz] trait Parser extends Factory {
+  import io.Source
+  import java.net.URL
+  import com.fasterxml.jackson.core.JsonProcessingException
+  import com.fasterxml.jackson.databind.node.TreeTraversingParser
+  import java.io.{EOFException, Reader, File, InputStream}
+
+  def parse[A](input: String)(implicit mf: Manifest[A]): A = parse[A](factory.createJsonParser(input), mf)
+
+  def parse[A](input: InputStream)(implicit mf: Manifest[A]): A = parse[A](factory.createJsonParser(input), mf)
+
+  def parse[A](input: File)(implicit mf: Manifest[A]): A = parse[A](factory.createJsonParser(input), mf)
+
+  def parse[A](input: URL)(implicit mf: Manifest[A]): A = parse[A](factory.createJsonParser(input), mf)
+
+  def parse[A](input: Reader)(implicit mf: Manifest[A]): A = parse[A](factory.createJsonParser(input), mf)
+
+  def parse[A](input: Array[Byte])(implicit mf: Manifest[A]): A = parse[A](factory.createJsonParser(input), mf)
+
+  def parse[A](input: Source)(implicit mf: Manifest[A]): A = parse[A](input.mkString)
+
+  def parse[A](input: JsonNode)(implicit mf: Manifest[A]): A = {
+    val parser = new TreeTraversingParser(input, mapper)
+    parse(parser, mf)
+  }
+
+  private def parse[A](parser: JsonParser, mf: Manifest[A]): A = {
+    try {
+      if (mf.erasure == classOf[JsValue] || mf.erasure == JsNull.getClass) {
+        val value: A = parser.getCodec.readValue(parser, ConstructType.build(mapper.getTypeFactory, mf))
+        if (value == null) JsNull.asInstanceOf[A] else value
+      } else {
+        parser.getCodec.readValue(parser, ConstructType.build(mapper.getTypeFactory, mf))
+      }
+    } catch {
+      case e: JsonProcessingException => throw ParsingException(e)
+      case e: EOFException => throw new ParsingException("JSON document ended unexpectedly.", e)
     }
   }
-  mapper.registerModule(module)
+}
 
+private[jsonz] object ConstructType {
+  import java.util.concurrent.ConcurrentHashMap
+  import scala.collection.JavaConversions
+
+  private val cachedTypes = JavaConversions.asScalaConcurrentMap(new ConcurrentHashMap[Manifest[_], JavaType]())
+
+  def build(factory: TypeFactory, manifest: Manifest[_]): JavaType =
+    cachedTypes.getOrElseUpdate(manifest, constructType(factory, manifest))
+
+  private def constructType(factory: TypeFactory, manifest: Manifest[_]): JavaType = {
+    if (manifest.erasure.isArray) {
+      ArrayType.construct(factory.constructType(manifest.erasure.getComponentType), null, null)
+    } else {
+      factory.constructParametricType(
+        manifest.erasure,
+        manifest.typeArguments.map {m => build(factory, m)}.toArray: _*)
+    }
+  }
 }

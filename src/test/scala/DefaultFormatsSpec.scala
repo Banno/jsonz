@@ -1,6 +1,6 @@
 package jsonz
 import jsonz.models._
-import scalaz.{NonEmptyList, Success, Failure, ValidationNEL}
+import scalaz.{NonEmptyList, Success, Failure, ValidationNel}
 import org.scalacheck.{Arbitrary, Prop}
 
 object DefaultFormatsSpec extends JsonzSpec {

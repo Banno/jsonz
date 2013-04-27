@@ -69,7 +69,7 @@ private[jsonz] class JsValueDeserializer(factory: TypeFactory, klass: Class[_]) 
   }
 
   @tailrec
-  final def deserialize(jp: JsonParser, ctxt: DeserializationContext, parserContext: List[DeserializerContext]): JsValue = { // idea: return a ValidationNEL
+  final def deserialize(jp: JsonParser, ctxt: DeserializationContext, parserContext: List[DeserializerContext]): JsValue = { // idea: return a ValidationNel
     if (jp.getCurrentToken == null) {
       jp.nextToken()
     }

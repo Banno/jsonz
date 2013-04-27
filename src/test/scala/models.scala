@@ -56,18 +56,18 @@ package object models {
       Nil
     }
 
-    def validAge(age: Int): ValidationNEL[String, Int] = {
+    def validAge(age: Int): ValidationNel[String, Int] = {
       if (age < 0) {
-        failure("less than zero").toValidationNEL
+        failure("less than zero").toValidationNel
       } else if (age > 200) {
-        failure("too old").toValidationNEL
+        failure("too old").toValidationNel
       } else {
-        success(age).toValidationNEL
+        success(age).toValidationNel
       }
     }
 
     def reads(js: JsValue) =
-      (field[Name]("name", js) |@| fieldWithValidationNEL[Int]("age", validAge, js)) { Person }
+      (field[Name]("name", js) |@| fieldWithValidationNel[Int]("age", validAge, js)) { Person }
   }
 
 

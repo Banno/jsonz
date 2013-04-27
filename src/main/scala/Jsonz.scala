@@ -1,6 +1,6 @@
 package jsonz
 import com.codahale.jerkson.ParsingException
-import scalaz.{Failure, Success, Validation, ValidationNEL}
+import scalaz.{Failure, Success, Validation, ValidationNel}
 
 object Jsonz {
   import JsFailure._
@@ -27,7 +27,7 @@ object Jsonz {
   def stringify(js: JsValue): String = JerksonJson.generate(js)
 
   private[this] def tryToParse(f: => JsValue): JsonzValidation[JsValue] = try {
-    success(f).toValidationNEL
+    success(f).toValidationNel
   } catch {
     case _: ParsingException => jsFailureValidationNel("not valid JSON")
   }

@@ -10,7 +10,7 @@ trait DefaultFormats {
 
   implicit object StringFormat extends Format[String] {
     def reads(js: JsValue) = js match {
-      case JsString(str) => success(str).toValidationNEL
+      case JsString(str) => success(str).toValidationNel
       case _ => jsFailureValidationNel("not a string")
     }
 
@@ -64,7 +64,7 @@ trait DefaultFormats {
 
   implicit object BigDecimalFormat extends Format[BigDecimal] {
     def reads(js: JsValue) = js match {
-      case JsNumber(num) => success(num).toValidationNEL
+      case JsNumber(num) => success(num).toValidationNel
       case _ => jsFailureValidationNel("not an arbitrary decimal")
     }
     def writes(o: BigDecimal) = JsNumber(o)
@@ -72,7 +72,7 @@ trait DefaultFormats {
 
   implicit object BooleanFormat extends Format[Boolean] {
     def reads(js: JsValue) = js match {
-      case JsBoolean(bool) => success(bool).toValidationNEL
+      case JsBoolean(bool) => success(bool).toValidationNel
       case _ => jsFailureValidationNel("not a boolean")
     }
     def writes(o: Boolean) = JsBoolean(o)
@@ -80,8 +80,8 @@ trait DefaultFormats {
 
   implicit object JsValueFormat extends Format[JsValue] {
     def reads(js: JsValue) = js match {
-      case null => success(JsNull).toValidationNEL
-      case _ => success(js).toValidationNEL
+      case null => success(JsNull).toValidationNel
+      case _ => success(js).toValidationNel
     }
 
     def writes(js: JsValue) = js

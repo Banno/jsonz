@@ -243,7 +243,7 @@ private[jsonz] trait Parser extends Factory {
 
   private def parse[A](parser: JsonParser, mf: Manifest[A]): A = {
     try {
-      if (mf.erasure == classOf[JsValue] || mf.erasure == JsNull.getClass) {
+      if (mf.runtimeClass == classOf[JsValue] || mf.runtimeClass == JsNull.getClass) {
         val value: A = parser.getCodec.readValue(parser, ConstructType.build(mapper.getTypeFactory, mf))
         if (value == null) JsNull.asInstanceOf[A] else value
       } else {
@@ -257,20 +257,18 @@ private[jsonz] trait Parser extends Factory {
 }
 
 private[jsonz] object ConstructType {
-  import java.util.concurrent.ConcurrentHashMap
-  import scala.collection.JavaConversions
 
-  private val cachedTypes = JavaConversions.asScalaConcurrentMap(new ConcurrentHashMap[Manifest[_], JavaType]())
+  private val cachedTypes = scala.collection.concurrent.TrieMap.empty[Manifest[_], JavaType]
 
   def build(factory: TypeFactory, manifest: Manifest[_]): JavaType =
     cachedTypes.getOrElseUpdate(manifest, constructType(factory, manifest))
 
   private def constructType(factory: TypeFactory, manifest: Manifest[_]): JavaType = {
-    if (manifest.erasure.isArray) {
-      ArrayType.construct(factory.constructType(manifest.erasure.getComponentType), null, null)
+    if (manifest.runtimeClass.isArray) {
+      ArrayType.construct(factory.constructType(manifest.runtimeClass.getComponentType), null, null)
     } else {
       factory.constructParametricType(
-        manifest.erasure,
+        manifest.runtimeClass,
         manifest.typeArguments.map {m => build(factory, m)}.toArray: _*)
     }
   }

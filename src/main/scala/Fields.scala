@@ -11,7 +11,7 @@ trait Fields {
     case jso: JsObject => {
       val maybeFromJson = jso.get(name) map fieldReads.reads
       maybeFromJson.map(groupFieldJsFailures(name)) getOrElse {
-        if (classOf[Option[_]].isAssignableFrom(manifest.erasure)) {
+        if (classOf[Option[_]].isAssignableFrom(manifest.runtimeClass)) {
           success(None.asInstanceOf[T])
         } else {
           jsFailureValidationNel(name, "is missing")

@@ -2,6 +2,7 @@ package jsonz
 import scalaz._
 import scalaz.Validation._
 import scalaz.syntax._
+import scala.language.higherKinds
 
 object DefaultFormats extends DefaultFormats with ProductFormats with LazyFormat
 
@@ -89,7 +90,7 @@ trait DefaultFormats {
 
   implicit def optionFormat[T](implicit tr: Reads[T], tw: Writes[T], m: Manifest[T]): Format[Option[T]] = new Format[Option[T]] {
     def reads(js: JsValue) = js match {
-      case JsNull if classOf[Option[_]].isAssignableFrom(m.erasure) => tr.reads(JsNull).map(Some.apply)
+      case JsNull if classOf[Option[_]].isAssignableFrom(m.runtimeClass) => tr.reads(JsNull).map(Some.apply)
       case JsNull => success(None)
       case jsv => tr.reads(jsv).map(Some.apply)
     }
@@ -181,7 +182,7 @@ trait DefaultFormats {
 
   private[this] def tryCatchingToJsFailureValidationNel[T, E <: Exception](msg: String, f: => T)(implicit m: Manifest[E]): JsonzValidation[T] = {
     import scala.util.control.Exception._
-    val maybeResult = catching(m.erasure).opt(f)
+    val maybeResult = catching(m.runtimeClass).opt(f)
     maybeResult.map(success).getOrElse(jsFailureValidationNel(msg))
   }
 

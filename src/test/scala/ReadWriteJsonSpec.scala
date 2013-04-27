@@ -17,7 +17,7 @@ object ReadWriteJsonSpec extends JsonzSpec {
         age must_== person.age
     }
     val jsStr = Jsonz.stringify(js)
-    jsStr must not beEmpty
+    jsStr must not (beEmpty)
   }
 
   "be able to read raw json to a Person" in {

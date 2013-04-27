@@ -21,15 +21,15 @@ trait Fields {
     case _ => jsFailureValidationNel("is not an object")
   }
 
-  def fieldWithValidationNEL[T : Reads : Manifest](name: String,
-                                                   valid: (T) => ValidationNEL[String, T],
+  def fieldWithValidationNel[T : Reads : Manifest](name: String,
+                                                   valid: (T) => ValidationNel[String, T],
                                                    js: JsValue): JsonzValidation[T] =
     field[T](name, js).flatMap { value =>
       valid(value).bimap(fs => jsFailureNel(name, fs.map(jsFailure)), identity)
     }
 
   def fieldWithValidation[T : Reads : Manifest](name: String, valid: (T) => Validation[String, T], js: JsValue): JsonzValidation[T] =
-    fieldWithValidationNEL[T](name, valid andThen (_.toValidationNEL), js)
+    fieldWithValidationNel[T](name, valid andThen (_.toValidationNel), js)
 
   private[this] def groupFieldJsFailures[T](name: String)(jsV: JsonzValidation[T]): JsonzValidation[T] =
     jsV.bimap(fs => jsFailureNel(name, fs), identity)

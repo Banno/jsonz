@@ -19,8 +19,8 @@ publishTo := Some("Banno Snapshots Repo" at "http://nexus.banno.com/nexus/conten
 credentials += Credentials(Path.userHome / ".ivy2" / ".banno_credentials")
 
 libraryDependencies ++= Seq(
-  "org.scalaz" % "scalaz-core_2.10" % "7.0.0-M8",
-  "org.scalaz" % "scalaz-typelevel_2.10" % "7.0.0-M8",
+  "org.scalaz" %% "scalaz-core" % "7.0.0",
+  "org.scalaz" %% "scalaz-typelevel" % "7.0.0",
   "com.fasterxml.jackson.module" %% "jackson-module-scala" % "2.1.3"
 )
 

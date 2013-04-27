@@ -14,8 +14,8 @@ object JsFailure {
     NonEmptyList(JsFieldFailure(name, failures))
 
   def jsFailureValidationNel[A](statement: String): JsonzValidation[A] =
-    failure(JsFailureStatement(statement)).toValidationNEL
+    failure(JsFailureStatement(statement)).toValidationNel
   def jsFailureValidationNel[A](name: String, statement: String): JsonzValidation[A] =
-    failure(JsFieldFailure(name, NonEmptyList(JsFailureStatement(statement)))).toValidationNEL
+    failure(JsFieldFailure(name, NonEmptyList(JsFailureStatement(statement)))).toValidationNel
 
 }

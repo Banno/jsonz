@@ -2,18 +2,18 @@ package jsonz
 import org.specs2.matcher.Matcher
 import org.specs2.mutable.Specification
 import org.specs2.ScalaCheck
-import scalaz.{NonEmptyList, ValidationNEL}
+import scalaz.{NonEmptyList, ValidationNel}
 
 trait JsonzSpec extends Specification with ScalaCheck {
-  def beSuccess[A, B](b: B): Matcher[ValidationNEL[A,B]] = { v: ValidationNEL[A,B] =>
+  def beSuccess[A, B](b: B): Matcher[ValidationNel[A,B]] = { v: ValidationNel[A,B] =>
     v.map(_ must beEqualTo(b)).getOrElse(failure("not a success"))
   }
 
-  def containFailure[A, B](a: A): Matcher[ValidationNEL[A,B]] = { v: ValidationNEL[A,B] =>
+  def containFailure[A, B](a: A): Matcher[ValidationNel[A,B]] = { v: ValidationNel[A,B] =>
     v.swap.map(_.list must contain(a)).getOrElse(failure("not a failure"))
   }
 
-  def haveFailureCount[A, B](n: Int): Matcher[ValidationNEL[A,B]] = { v: ValidationNEL[A,B] =>
+  def haveFailureCount[A, B](n: Int): Matcher[ValidationNel[A,B]] = { v: ValidationNel[A,B] =>
     v.swap.map(_.list must haveSize(n)).getOrElse(failure("not a failure"))
   }
 

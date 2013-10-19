@@ -44,7 +44,7 @@ trait Specs2JsonzTestkit extends DefaultFormats with MatchersImplicits {
 
   private[this] val UUID = """([\da-fA-F]{8}-[\da-fA-F]{4}-[\da-fA-F]{4}-[\da-fA-F]{4}-[\da-fA-F]{12})""".r
   private[this] def isUUID(str: JsValue) = str match {
-    case JsString(s) => UUID.findFirstIn(s).isDefined
+    case JsString(UUID(s)) => true
     case _ => false
   }
 

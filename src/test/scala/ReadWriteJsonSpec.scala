@@ -30,7 +30,7 @@ object ReadWriteJsonSpec extends JsonzSpec {
   "allow an optional field not to have to be there" in {
     val jsStr = """{"name":{"first":"Luke", "last":"Amdor"},"age":28}"""
     val pV: JsonzValidation[Person] = Jsonz.fromJsonStr[Person](jsStr)
-    pV.map(_.name.middle must beNone).getOrElse(failure("not a success"))
+    (pV.toOption must beSome) and (pV.toOption.flatMap(_.name.middle) must beNone)
   }
 
   "be able to test the validity of fields" in {

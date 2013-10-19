@@ -4,7 +4,7 @@ organization := "jsonz"
 
 version := "0.5-SNAPSHOT"
 
-scalaVersion := "2.10.1"
+scalaVersion := "2.10.3"
 
 scalacOptions ++= Seq("-deprecation", "-feature", "-unchecked")
 
@@ -32,8 +32,13 @@ libraryDependencies ++= Seq(
   "com.typesafe.akka" %% "akka-actor" % "2.1.4" % "provided"
 )
 
+// specs2 support
 libraryDependencies ++= Seq(
-  "org.specs2" %% "specs2" % "1.12.3" % "test",
+  "org.specs2" %% "specs2" % "2.2.3" % "provided"
+)
+
+libraryDependencies ++= Seq(
+  "org.specs2" %% "specs2" % "2.2.3" % "test",
   "org.scalacheck" %% "scalacheck" % "1.10.0" % "test"
 )
 

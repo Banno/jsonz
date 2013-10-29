@@ -15,12 +15,12 @@ package object spray {
       val canUnmarshalFrom: Seq[ContentTypeRange] = Seq(ContentTypes.`application/json`)
 
       def unmarshal(entity: HttpEntity) = entity match {
-        case body: HttpBody =>
-          val v = Jsonz.fromJsonBytes(body.buffer)
+        case body: HttpEntity if body.nonEmpty =>
+          val v = Jsonz.fromJsonBytes(body.data.toByteArray)
           import DefaultFormats.nonEmptyListFormat
           import DefaultFormats.jsFailureFormat
           v.toEither.left.map(failures => MalformedContent(Jsonz.toJsonStr(failures)))
-        case EmptyEntity => Left(ContentExpected)
+        case _ => Left(ContentExpected)
       }
     }
 }

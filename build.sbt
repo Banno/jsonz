@@ -4,7 +4,7 @@ organization := "jsonz"
 
 version := "0.5-SNAPSHOT"
 
-scalaVersion := "2.10.1"
+scalaVersion := "2.10.3"
 
 scalacOptions ++= Seq("-deprecation", "-feature", "-unchecked")
 
@@ -28,7 +28,7 @@ libraryDependencies ++= Seq(
 
 // spray support
 libraryDependencies ++= Seq(
-  "io.spray" % "spray-httpx" % "1.1-M8" % "provided",
+  "io.spray" % "spray-httpx" % "1.1-RC1" % "provided",
   "com.typesafe.akka" %% "akka-actor" % "2.1.4" % "provided"
 )
 

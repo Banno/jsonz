@@ -12,7 +12,7 @@ package object spray {
 
   implicit def readsUnmarshaller[T : Reads]: Unmarshaller[T] =
     new SimpleUnmarshaller[T] {
-      val canUnmarshalFrom: Seq[ContentTypeRange] = Seq(ContentTypes.`application/json`)
+      val canUnmarshalFrom: Seq[ContentTypeRange] = Seq(ContentTypeRange(MediaTypes.`application/json`))
 
       def unmarshal(entity: HttpEntity) = entity match {
         case body: HttpEntity if body.nonEmpty =>

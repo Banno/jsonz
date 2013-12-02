@@ -4,7 +4,7 @@ import scalaz.Validation._
 import scalaz.syntax._
 import scala.language.higherKinds
 
-object DefaultFormats extends DefaultFormats with ProductFormats with LazyFormat
+object DefaultFormats extends DefaultFormats with ProductFormats with LazyFormat with EnumerationFormats
 
 trait DefaultFormats {
   import JsFailure._
@@ -198,6 +198,6 @@ trait DefaultFormats {
     def writes(failure: JsFailure) = failure match {
       case JsFailureStatement(statement) => JsString(statement)
       case jff: JsFieldFailure           => jsFieldFailureFormat.writes(jff)
-    }    
+    }
   }
 }

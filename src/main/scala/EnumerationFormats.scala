@@ -39,12 +39,12 @@ trait JavaEnumerationFormats {
 
     def reads(js: JsValue): JsonzValidation[E] = js match {
       case JsString(str) =>
-        val maybeSuccessfulEnum = allCatch.opt(Enum.valueOf[E](enumeration.getDeclaringClass, str))
+        val maybeSuccessfulEnum = allCatch.opt(Enum.valueOf[E](enumeration.getDeclaringClass, str.toUpperCase))
         maybeSuccessfulEnum.map(Validation.success).getOrElse(JsFailure.jsFailureValidationNel("not a valid value"))
 
       case _ => JsFailure.jsFailureValidationNel("not a valid value")
     }
 
-    def writes(ev: E): JsValue = JsString(ev.name)
+    def writes(ev: E): JsValue = JsString(ev.name.toUpperCase)
   }
 }

@@ -10,6 +10,9 @@ object EnumerationFormatsSpec extends JsonzSpec {
     fromJson(toJson(Animals.Tiger))(AnimalsFormat) must beSuccess(Animals.Tiger)
     fromJson(JsString("swallow"))(AnimalsFormat) must beSuccess(Animals.Swallow)
     fromJson(JsString("l1on"))(AnimalsFormat) must not(beSuccess(Animals.Lion))
+    fromJson(JsString("nope"))(AnimalsFormat) must containFailure(
+      JsFailureStatement("not one of List(Tiger, Lion, Swallow)")
+    )
   }
 
   "convert to and from java enums" in new context {
@@ -17,7 +20,7 @@ object EnumerationFormatsSpec extends JsonzSpec {
     fromJson(JsString("TUESDAY"))(DaysFormat) must beSuccess(Day.TUESDAY)
     fromJson(JsString("tuesday"))(DaysFormat) must beSuccess(Day.TUESDAY)
     fromJson(JsString("nope"))(DaysFormat) must containFailure(
-      JsFailureStatement("The value nope was not found among List(SUNDAY, MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY)")
+      JsFailureStatement("not one of List(SUNDAY, MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY)")
     )
   }
 

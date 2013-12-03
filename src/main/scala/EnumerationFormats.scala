@@ -2,14 +2,11 @@ package jsonz
 import java.lang.Enum
 import scalaz.Validation
 import scala.util.control.Exception._
+import scala.collection.JavaConversions
 
 trait EnumerationFormats extends ScalaEnumerationFormats with JavaEnumerationFormats
 
 trait ScalaEnumerationFormats {
-  private[this] implicit class EnhancedEnumerationOps[E <: Enumeration](val enum: E) {
-    def withNameIgnoreCase(s: String): E#Value = enum.values.find(_.toString.equalsIgnoreCase(s)).get
-  }
-
   def scalaEnumerationFormat[E <: Enumeration](enum: E) = new ScalaEnumerationFormat[E] {
     lazy val enumeration = enum
   }
@@ -18,14 +15,16 @@ trait ScalaEnumerationFormats {
     def enumeration: E
 
     def reads(js: JsValue): JsonzValidation[E#Value] = js match {
-      case JsString(str) =>
-        val maybeSuccessfulEnum = allCatch.opt(enumeration.withNameIgnoreCase(str).asInstanceOf[E#Value])
-        maybeSuccessfulEnum.map(Validation.success).getOrElse(JsFailure.jsFailureValidationNel("not a valid value"))
-
-      case _ => JsFailure.jsFailureValidationNel("not a valid value")
+      case JsString(str) => findValueInScalaEnum(enumeration, str).map(Validation.success).getOrElse(generateFailureForMissingValue(str, enumeration.values))
+      case jsv => JsFailure.jsFailureValidationNel(s"JsValue ${jsv} was not a JsString")
     }
 
     def writes(e: E#Value): JsValue = JsString(e.toString)
+
+    private[this] def generateFailureForMissingValue(key: String, otherValues: E#ValueSet): JsonzValidation[E#Value] =
+      JsFailure.jsFailureValidationNel(s"The value ${key} was not found among ${otherValues.toList.map(_.toString)}")
+
+    private[this] def findValueInScalaEnum(enum: E, key: String): Option[E#Value] = enum.values.find(_.toString.equalsIgnoreCase(key))
   }
 }
 
@@ -39,10 +38,12 @@ trait JavaEnumerationFormats {
 
     def reads(js: JsValue): JsonzValidation[E] = js match {
       case JsString(str) =>
-        val maybeSuccessfulEnum = allCatch.opt(Enum.valueOf[E](enumeration.getDeclaringClass, str.toUpperCase))
-        maybeSuccessfulEnum.map(Validation.success).getOrElse(JsFailure.jsFailureValidationNel("not a valid value"))
+        val enumClass = enumeration.getDeclaringClass
+      val maybeSuccessfulEnum = allCatch.opt(Enum.valueOf[E](enumClass, str.toUpperCase))
+      val maybeSuccess = maybeSuccessfulEnum.map(Validation.success)
+      maybeSuccess.getOrElse(JsFailure.jsFailureValidationNel(s"The value ${str} was not found among ${enumClass.getEnumConstants.toList.map(_.toString)}"))
 
-      case _ => JsFailure.jsFailureValidationNel("not a valid value")
+      case jsv => JsFailure.jsFailureValidationNel(s"JsValue ${jsv} was not a JsString")
     }
 
     def writes(ev: E): JsValue = JsString(ev.name.toUpperCase)

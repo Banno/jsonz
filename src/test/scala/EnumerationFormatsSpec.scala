@@ -16,7 +16,9 @@ object EnumerationFormatsSpec extends JsonzSpec {
     fromJson(toJson(Day.MONDAY))(DaysFormat) must beSuccess(Day.MONDAY)
     fromJson(JsString("TUESDAY"))(DaysFormat) must beSuccess(Day.TUESDAY)
     fromJson(JsString("tuesday"))(DaysFormat) must beSuccess(Day.TUESDAY)
-    fromJson(JsString("nope"))(DaysFormat) must containFailure(JsFailure.jsFailure("not a valid value"))
+    fromJson(JsString("nope"))(DaysFormat) must containFailure(
+      JsFailureStatement("The value nope was not found among List(SUNDAY, MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY)")
+    )
   }
 
   trait context extends Scope {

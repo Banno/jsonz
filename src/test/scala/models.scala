@@ -8,12 +8,17 @@ package object models {
   import Fields._
 
   import Validation._
-
   import Arbitrary._
 
   case class Name(first: String, middle: Option[String], last: String)
   case class Person(name: Name, age: Int)
   val person = Person(Name("Luke", None, "Amdor"), 28)
+
+  object Animals extends Enumeration {
+    val Tiger = Value
+    val Lion = Value
+    val Swallow = Value
+  }
 
   implicit val nameArb = Arbitrary {
     for {

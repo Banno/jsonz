@@ -19,8 +19,7 @@ object SerializationSpec extends JsonzSpec {
   "array containing null" ! {
     val read = JacksonJson.parse[JsValue]("[null]")
     read must beLike {
-      case JsArray(elements) =>
-        elements must contain(JsNull: JsValue).only
+      case JsArray(elements) => elements must haveTheSameElementsAs(Seq(JsNull: JsValue))
     }
   }
 

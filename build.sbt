@@ -29,11 +29,11 @@ libraryDependencies ++= Seq(
 // spray support
 libraryDependencies ++= Seq(
   "io.spray" % "spray-httpx" % "1.1-RC3" % "provided",
-  "com.typesafe.akka" %% "akka-actor" % "2.1.4" % "provided"
+  "com.typesafe.akka" %% "akka-actor" % "2.1.4" % "provided",
+  "org.specs2" %% "specs2" % "1.12.3" % "provided"
 )
 
 libraryDependencies ++= Seq(
-  "org.specs2" %% "specs2" % "1.12.3" % "test",
   "org.scalacheck" %% "scalacheck" % "1.10.0" % "test"
 )
 

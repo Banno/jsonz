@@ -28,8 +28,8 @@ libraryDependencies ++= Seq(
 
 // joda datetime support
 libraryDependencies ++= Seq(
-  "org.joda" % "joda-convert" % "1.1",
-  "joda-time" % "joda-time" % "2.0"
+  "org.joda" % "joda-convert" % "1.1" % "provided",
+  "joda-time" % "joda-time" % "2.0" % "provided"
 )
 
 // spray support

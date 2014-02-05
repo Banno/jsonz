@@ -5,14 +5,15 @@ import org.scalacheck.{Arbitrary, Prop}
 object ValidationFormatsSpec extends JsonzSpec with ValidationFormats {
   import DefaultFormats._
   import Jsonz._
+  import jsonz.models._
 
-  implicitly[Writes[scalaz.Validation[Nothing,Int]]]
+  type JsonzFailure[E] = Validation[E, JsValue]
 
-  "write out a Success" ! check(toAndFrom[({ type l[a] = Validation[Nothing, a] })#l, Int](Success.apply(_): Validation[Nothing, Int]))
+  "write out a Success" ! check(toAndFrom[({ type l[a] = JsonzValidation[a] })#l, Int](Success.apply(_): Validation[Nothing, Int]))
 
-  // "write out failures" ! check(toAndFrom())
+  "write out failures" ! check(toAndFrom[({ type l[a] = JsonzFailure[a] })#l, Int](Failure.apply(_): Validation[Int, Nothing]))
 
-  //"write out failure nel's" ! check(toAndFrom())
+  "write out failure nel's" ! check(toAndFrom[({ type l[a] = JsonzFailure[a]})#l, NonEmptyList[Int]](n => Failure.apply(n): ValidationNel[Int, Nothing]))
 
   def toAndFrom[M[_], T: Reads : Writes : Arbitrary](builder: T => M[T])(implicit mw: Writes[M[T]]) = Prop.forAll { (o: T) =>
     val wrote = toJson(builder(o))

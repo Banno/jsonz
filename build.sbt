@@ -26,6 +26,12 @@ libraryDependencies ++= Seq(
   "com.fasterxml.jackson.module" %% "jackson-module-scala" % "2.1.3"
 )
 
+// joda datetime support
+libraryDependencies ++= Seq(
+  "org.joda" % "joda-convert" % "1.1" % "provided",
+  "joda-time" % "joda-time" % "2.0" % "provided"
+)
+
 // spray support
 libraryDependencies ++= Seq(
   "io.spray" % "spray-httpx" % "1.1-RC3" % "provided",
@@ -34,7 +40,7 @@ libraryDependencies ++= Seq(
 
 libraryDependencies ++= Seq(
   "org.specs2" %% "specs2" % "1.12.3" % "test",
-  "org.scalacheck" %% "scalacheck" % "1.10.0" % "test"
+  "org.scalacheck" %% "scalacheck" % "1.10.1" % "test"
 )
 
 // scalacOptions += "-Xlog-implicits"

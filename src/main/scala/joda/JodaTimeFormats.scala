@@ -7,7 +7,7 @@ import jsonz.DefaultFormats._
 import org.joda.time._
 import org.joda.time.format._
 
-trait DateTimeFormats {
+trait JodaTimeFormats {
   private val utcTimeZone = DateTimeZone.UTC
   private val isoFormat = ISODateTimeFormat.dateTime().withZone(utcTimeZone)
   private val isoFormatNoMillis = ISODateTimeFormat.dateTimeNoMillis().withZone(utcTimeZone)
@@ -39,4 +39,4 @@ trait DateTimeFormats {
     }
   }
 }
-object DateTimeFormats extends DateTimeFormats
+object JodaTimeFormats extends JodaTimeFormats

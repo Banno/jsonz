@@ -6,7 +6,7 @@ import org.specs2.ScalaCheck
 import org.scalacheck.{Gen, Arbitrary}
 import java.util.Date
 
-object DateTimeFormatsSpec extends Specification with ScalaCheck with DateTimeFormats {
+object JodaTimeFormatsSpec extends Specification with ScalaCheck with JodaTimeFormats {
   import Jsonz._
 
   def utc(time: DateTime) = time.withZone(DateTimeZone.UTC)

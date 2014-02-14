@@ -26,6 +26,6 @@ package object spray {
       }
   }
   object JsonzMarshalling extends JsonzMarshalling
-  implicit def writesMarshaller[T : Writes] = JsonzMarshallers.writesMarshaller
-  implicit def readsUnmarshaller[T : Reads] = JsonzMarshallers.readsUnmarshaller
+  implicit def writesMarshaller[T : Writes] = JsonzMarshalling.writesMarshaller
+  implicit def readsUnmarshaller[T : Reads] = JsonzMarshalling.readsUnmarshaller
 }

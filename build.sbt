@@ -4,7 +4,7 @@ organization := "jsonz"
 
 version := "0.6-SNAPSHOT"
 
-scalaVersion := "2.10.3"
+scalaVersion := "2.10.4"
 
 scalacOptions ++= Seq("-deprecation", "-feature", "-unchecked")
 

@@ -1,6 +1,7 @@
 package jsonz
 import jsonz.models._
 import scalaz._
+import org.specs2.matcher.{Matcher, MustExpectable}
 
 object ReadWriteJsonSpec extends JsonzSpec {
   "can write a person" in check { (person: Person) =>
@@ -30,7 +31,7 @@ object ReadWriteJsonSpec extends JsonzSpec {
   "allow an optional field not to have to be there" in {
     val jsStr = """{"name":{"first":"Luke", "last":"Amdor"},"age":28}"""
     val pV: JsonzValidation[Person] = Jsonz.fromJsonStr[Person](jsStr)
-    pV.map(_.name.middle must beNone).getOrElse(failure("not a success"))
+    pV.map(_.name.middle must beNone).getOrElse(Matcher.failure("not a success", MustExpectable(None)))
   }
 
   "be able to test the validity of fields" in {

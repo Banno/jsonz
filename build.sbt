@@ -21,7 +21,7 @@ publishTo := Some("Banno Snapshots Repo" at "http://nexus.banno.com/nexus/conten
 credentials += Credentials(Path.userHome / ".ivy2" / ".banno_credentials")
 
 libraryDependencies ++= Seq(
-  "org.scalaz" %% "scalaz-core" % "7.0.0",
+  "org.scalaz" %% "scalaz-core" % "7.0.6",
   "org.scalaz" %% "scalaz-typelevel" % "7.0.0",
   "com.fasterxml.jackson.module" %% "jackson-module-scala" % "2.1.3"
 )
@@ -34,13 +34,13 @@ libraryDependencies ++= Seq(
 
 // spray support
 libraryDependencies ++= Seq(
-  "io.spray" % "spray-httpx" % "1.1-RC3" % "provided",
-  "com.typesafe.akka" %% "akka-actor" % "2.1.4" % "provided"
+  "io.spray" % "spray-httpx" % "1.3.1" % "provided",
+  "com.typesafe.akka" %% "akka-actor" % "2.3.2" % "provided"
 )
 
 libraryDependencies ++= Seq(
-  "org.specs2" %% "specs2" % "1.12.3" % "test",
-  "org.scalacheck" %% "scalacheck" % "1.10.1" % "test"
+  "org.specs2" %% "specs2" % "2.3.12" % "test",
+  "org.scalacheck" %% "scalacheck" % "1.11.4" % "test"
 )
 
 // scalacOptions += "-Xlog-implicits"

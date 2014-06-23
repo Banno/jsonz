@@ -2,7 +2,7 @@ name := "jsonz"
 
 organization := "jsonz"
 
-version := "0.7-SNAPSHOT"
+version := "0.6-SNAPSHOT"
 
 scalaVersion := "2.10.4"
 

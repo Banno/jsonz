@@ -3,13 +3,13 @@ import _root_.spray.http._
 import _root_.spray.httpx.marshalling._
 import _root_.spray.httpx.unmarshalling._
 
-package object spray {
+package spray {
+
   trait JsonzMarshalling {
     implicit def writesMarshaller[T : Writes] =
       Marshaller.of[T](ContentTypes.`application/json`) { (value, contentType, ctx) =>
         ctx.marshalTo(HttpEntity(contentType, Jsonz.toJsonBytes(value)))
       }
-
 
     implicit def readsUnmarshaller[T : Reads]: Unmarshaller[T] =
       new SimpleUnmarshaller[T] {
@@ -25,7 +25,12 @@ package object spray {
         }
       }
   }
+}
+
+package object spray {
   object JsonzMarshalling extends JsonzMarshalling
-  implicit def writesMarshaller[T : Writes] = JsonzMarshalling.writesMarshaller
-  implicit def readsUnmarshaller[T : Reads] = JsonzMarshalling.readsUnmarshaller
+  implicit def writesMarshaller[T: Writes] = JsonzMarshalling.writesMarshaller
+  implicit def readsUnmarshaller[T: Reads] = JsonzMarshalling.readsUnmarshaller
+
+  implicit def toResponseMarshaller[T: Marshaller]: ToResponseMarshaller[T] = ToResponseMarshaller.fromMarshaller[T]()
 }

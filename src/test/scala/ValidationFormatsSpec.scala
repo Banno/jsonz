@@ -15,6 +15,7 @@ object ValidationFormatsSpec extends JsonzSpec with ValidationFormats {
 
   "write out failure nel's" ! check(toAndFrom[({ type l[a] = JsonzFailure[a]})#l, NonEmptyList[Int]](n => Failure.apply(n): ValidationNel[Int, Nothing]))
 
+  import scala.language.higherKinds
   def toAndFrom[M[_], T: Reads : Writes : Arbitrary](builder: T => M[T])(implicit mw: Writes[M[T]]) = Prop.forAll { (o: T) =>
     val wrote = toJson(builder(o))
     val read = fromJson[T](wrote)

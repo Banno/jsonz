@@ -34,10 +34,10 @@ libraryDependencies ++= Seq(
 
 // spray support
 libraryDependencies ++= Seq(
-  "io.spray" % "spray-httpx" % "1.3.1" % "provided",
-  "io.spray" % "spray-routing" % "1.3.1" % "provided",
+  "io.spray" % "spray-httpx" % "1.1.0" % "provided",
+  "io.spray" % "spray-routing" % "1.1.0" % "provided",
   "org.scalaz" %% "scalaz-effect" % "7.0.6" % "provided",
-  "com.typesafe.akka" %% "akka-actor" % "2.3.2" % "provided"
+  "com.typesafe.akka" %% "akka-actor" % "2.1.4" % "provided"
 )
 
 libraryDependencies ++= Seq(

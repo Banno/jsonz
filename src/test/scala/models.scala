@@ -93,23 +93,27 @@ package object models {
     }
   }
 
+  implicit val genJsNull = Gen.value(JsNull)
+  implicit val genJsBoolean = for { b <- arbitrary[Boolean] } yield JsBoolean(b)
+  implicit val genJsString = for { s <- arbitrary[String] } yield JsString(s)
+  implicit val genJsNumber = for { bd <- arbitrary[Float] } yield JsNumber(bd)
+
+  implicit val arbJsNull = Arbitrary { genJsNull }
+  implicit val arbJsBoolean = Arbitrary { genJsBoolean }
+  implicit val arbJsString = Arbitrary { genJsString }
+  implicit val arbJsNumber = Arbitrary { genJsNumber }
+
+  def genJsArray(size: Int) = for {
+    n  <- Gen.choose(0, size / 10)
+    xs <- Gen.listOfN(n, arbitrary[JsValue])
+  } yield JsArray(xs)
+
+  def genJsObject(size: Int) = for {
+    n  <- Gen.choose(0, size / 25)
+    fields <- Gen.listOfN(n, arbitrary[Pair[String, JsValue]])
+  } yield JsObject(fields)
 
   implicit lazy val arbJsValue: Arbitrary[JsValue] = Arbitrary {
-    val genJsNull = Gen.value(JsNull)
-    val genJsBoolean = for { b <- arbitrary[Boolean] } yield JsBoolean(b)
-    val genJsString = for { s <- arbitrary[String] } yield JsString(s)
-    val genJsNumber = for { bd <- arbitrary[Float] } yield JsNumber(bd)
-
-    def genJsArray(size: Int) = for {
-      n  <- Gen.choose(0, size / 10)
-      xs <- Gen.listOfN(n, arbitrary[JsValue])
-    } yield JsArray(xs)
-
-    def genJsObject(size: Int) = for {
-      n  <- Gen.choose(0, size / 25)
-      fields <- Gen.listOfN(n, arbitrary[Pair[String, JsValue]])
-    } yield JsObject(fields)
-
     Gen.sized { size =>
       Gen.oneOf(
         genJsNull,

@@ -24,5 +24,4 @@ trait JsonzSpec extends Specification with ScalaCheck {
   def containJsFieldFailure[B](path: String, statement: String): Matcher[JsonzValidation[B]] = { (v: JsonzValidation[B]) =>
     v must containFailure(JsFieldFailure(path, NonEmptyList(JsFailureStatement(statement))))
   }
-
 }

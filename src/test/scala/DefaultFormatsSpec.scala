@@ -107,8 +107,8 @@ object DefaultFormatsSpec extends JsonzSpec {
     fromJson[mutable.Set[String]](JsArray(Seq(JsNumber(1.23), JsBoolean(false)))) must containJsFailureStatement("not a string")
   }
 
-  "Array[String]" ! check(toAndFrom[Array[String]])
-  "Array[Int]" ! check(toAndFrom[Array[Int]])
+  "Array[String]" ! check(transformFirst[Array[String], JsArray](items => JsArray(items.map(toJson(_)))))
+  "Array[Int]" ! check(transformFirst[Array[Int], JsArray](items => JsArray(items.map(toJson(_)))))
   "Array failures" ! {
     fromJson[Array[String]](JsObject(Nil)) must containJsFailureStatement("not an array")
     fromJson[Array[String]](JsNull) must containJsFailureStatement("not an array")
@@ -137,6 +137,12 @@ object DefaultFormatsSpec extends JsonzSpec {
   }
 
   "NonEmptyList[JsFailure]" ! check(toAndFrom[NonEmptyList[JsFailure]])
+
+  def transformFirst[T: Arbitrary : Reads, X <: JsValue](f: T => X) = Prop.forAll { (o: T) =>
+    val after = f(o)
+    val read = fromJson[T](after)
+    read.map(f(_)) must beSuccess(after)
+  }
 
   def toAndFrom[T : Reads : Writes : Arbitrary] = Prop.forAll { (o: T) =>
     val wrote = toJson(o)

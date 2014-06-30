@@ -95,7 +95,7 @@ package object models {
 
 
   implicit lazy val arbJsValue: Arbitrary[JsValue] = Arbitrary {
-    val genJsNull = Gen.value(JsNull)
+    val genJsNull = Gen.const(JsNull)
     val genJsBoolean = for { b <- arbitrary[Boolean] } yield JsBoolean(b)
     val genJsString = for { s <- arbitrary[String] } yield JsString(s)
     val genJsNumber = for { bd <- arbitrary[Float] } yield JsNumber(bd)
@@ -107,7 +107,7 @@ package object models {
 
     def genJsObject(size: Int) = for {
       n  <- Gen.choose(0, size / 25)
-      fields <- Gen.listOfN(n, arbitrary[Pair[String, JsValue]])
+      fields <- Gen.listOfN(n, arbitrary[Tuple2[String, JsValue]])
     } yield JsObject(fields)
 
     Gen.sized { size =>

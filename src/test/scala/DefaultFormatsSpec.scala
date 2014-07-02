@@ -1,7 +1,8 @@
 package jsonz
 import jsonz.models._
-import scalaz.{NonEmptyList, Success, Failure, ValidationNel}
+import scala.language.higherKinds
 import org.scalacheck.{Arbitrary, Prop}
+import scalaz.{NonEmptyList, Success, Failure, ValidationNel}
 
 object DefaultFormatsSpec extends JsonzSpec {
   import DefaultFormats._
@@ -137,6 +138,38 @@ object DefaultFormatsSpec extends JsonzSpec {
   }
 
   "NonEmptyList[JsFailure]" ! check(toAndFrom[NonEmptyList[JsFailure]])
+
+  "Left[Int, _]" ! check(toAndFrom[({ type l[a] = Left[a, String] })#l, Int](Left.apply))
+  "Right[_, Int]" ! check(toAndFrom[({ type r[a] = Right[String, a] })#r, Int](Right.apply))
+
+  "Left's and Right's should combine powers" ! {
+    val model1: Either[Int, String] = Left(100)
+    val model2: Either[Int, String] = Right("100")
+
+    fromJson[Either[Int, String]](toJson(model1)).toOption must beSome(model1)
+    fromJson[Either[Int, String]](toJson(model2)).toOption must beSome(model2)
+  }
+
+  "Left's and Right's can trip us up sometimes" in {
+    val model1: Either[Int, String] = Left(100)
+    fromJson[Either[String, Int]](toJson(model1)).toOption must beSome(Right(100))
+    fromJson[Either[Double, Int]](toJson(model1)).toOption must beSome(Left(100D))
+  }
+
+  "Left's and Right's shouldn't be able to read other formats though" ! {
+    val model1: Either[Int, String] = Left(100)
+
+    fromJson[String](toJson(model1)) must not(beSuccess(model1))
+    fromJson[List[Int]](toJson(model1)) must not(beSuccess(model1))
+    fromJson[Either[Boolean, Boolean]](toJson(model1)) must not(beSuccess(model1))
+    fromJson[Either[List[Int], Map[String, Int]]](toJson(model1)) must not(beSuccess(model1))
+  }
+
+  def toAndFrom[M[_], T: Reads : Writes : Arbitrary](builder: T => M[T])(implicit mw: Writes[M[T]]) = Prop.forAll { (o: T) =>
+    val wrote = toJson(builder(o))
+    val read = fromJson[T](wrote)
+    read must beSuccess(o)
+  }
 
   def toAndFrom[T : Reads : Writes : Arbitrary] = Prop.forAll { (o: T) =>
     val wrote = toJson(o)

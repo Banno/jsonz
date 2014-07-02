@@ -200,4 +200,14 @@ trait DefaultFormats {
       case jff: JsFieldFailure           => jsFieldFailureFormat.writes(jff)
     }
   }
+
+  implicit def eitherFormat[L, R](implicit lf: Format[L], rf: Format[R]) = new Format[Either[L, R]] {
+    def reads(js: JsValue): JsonzValidation[Either[L, R]] =
+      lf.reads(js).map(Left[L, R](_)) orElse rf.reads(js).map(Right[L, R](_))
+
+    def writes(either: Either[L, R]): JsValue = either match {
+      case Left(v) => lf.writes(v)
+      case Right(v) => rf.writes(v)
+    }
+  }
 }

@@ -138,4 +138,16 @@ package object models {
       (1, genJsFieldFailure)
     )
   }
+
+  implicit def leftArb[T: Arbitrary]: Arbitrary[Left[T, _]] = Arbitrary {
+    for {
+      value <- Arbitrary.arbitrary[T]
+    } yield Left(value)
+  }
+
+  implicit def rightArb[T: Arbitrary]: Arbitrary[Right[T, _]] = Arbitrary {
+    for {
+      value <- Arbitrary.arbitrary[T]
+    } yield Right(value)
+  }
 }

@@ -161,7 +161,7 @@ object DefaultFormatsSpec extends JsonzSpec {
 
     fromJson[String](toJson(model1)) must not(beSuccess)
     fromJson[List[Int]](toJson(model1)) must not(beSuccess)
-    fromJson[Either[Boolean, Boolean]](toJson(model1)) must not(beSuccess)
+    //fromJson[Either[Boolean, Boolean]](toJson(model1)) must not(beSuccess) // doesn't compile because Boolean =:= Boolean
     fromJson[Either[List[Int], Map[String, Int]]](toJson(model1)) must not(beSuccess)
   }
 

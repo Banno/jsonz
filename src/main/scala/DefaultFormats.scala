@@ -201,7 +201,7 @@ trait DefaultFormats {
     }
   }
 
-  implicit def eitherFormat[L, R](implicit lf: Format[L], rf: Format[R]) = new Format[Either[L, R]] {
+  implicit def eitherFormat[L, R](implicit lf: Format[L], rf: Format[R], ne: L =:!= R) = new Format[Either[L, R]] {
     def reads(js: JsValue): JsonzValidation[Either[L, R]] =
       lf.reads(js).map(Left[L, R](_)) orElse rf.reads(js).map(Right[L, R](_))
 

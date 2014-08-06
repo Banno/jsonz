@@ -35,11 +35,17 @@ libraryDependencies ++= Seq(
 )
 
 // spray support
-libraryDependencies ++= Seq(
-  "io.spray" % "spray-httpx" % "1.3.1" % "provided",
-  "com.typesafe.akka" %% "akka-actor" % "2.3.3" % "provided"
-)
+libraryDependencies <++= (scalaVersion) { (sv) =>
+  Seq(
+    "io.spray" % "spray-httpx" % "1.3.1" % "provided",
+    if (sv.startsWith("2.11"))
+      "com.typesafe.akka" %% "akka-actor" % "2.3.3" % "provided"
+    else
+      "com.typesafe.akka" %% "akka-actor" % "2.1.4" % "provided"
+  )
+}
 
+// test deps
 libraryDependencies ++= Seq(
   "org.specs2" %% "specs2" % "2.3.12" % "test",
   "org.scalacheck" %% "scalacheck" % "1.10.1" % "test"

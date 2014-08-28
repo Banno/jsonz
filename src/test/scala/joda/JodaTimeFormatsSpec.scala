@@ -1,12 +1,11 @@
 package jsonz.joda
 import jsonz._
 import org.joda.time.{DateTimeZone, DateTime}
-import org.specs2.mutable.Specification
 import org.specs2.ScalaCheck
-import org.scalacheck.{Gen, Arbitrary}
+import org.scalacheck.{Gen, Arbitrary, Prop}
 import java.util.Date
 
-object JodaTimeFormatsSpec extends Specification with ScalaCheck with JodaTimeFormats {
+object JodaTimeFormatsSpec extends JsonzSpec with ScalaCheck with JodaTimeFormats {
   import Jsonz._
 
   def utc(time: DateTime) = time.withZone(DateTimeZone.UTC)
@@ -18,20 +17,28 @@ object JodaTimeFormatsSpec extends Specification with ScalaCheck with JodaTimeFo
   }
 
   "DateTimeFormat" should {
-    "read from ISO8601 format" in check { (time: DateTime) =>
-      val json = toJson(time)
-      val read = fromJson[DateTime](json)
-      read.map(_ must_== time).getOrElse(failure("not a success"))
+    "read from ISO8601 format" in {
+      check(toAndFrom[DateTime])
     }
 
-    "read from YYYY-MM-dd format" in check { (time: DateTime) =>
-      val read = fromJson[DateTime](JsString(time.toString("YYYY-MM-dd")))
-      read.map(_ must_== time.withTimeAtStartOfDay).getOrElse(failure("not a success"))
+    "read from YYYY-MM-dd format" in {
+      check(transformFirst[DateTime, JsString](dt => JsString(dt.toString("YYYY-MM-dd"))))
     }
 
-    "read from long format" in check { (time: DateTime) =>
-      val read = fromJson[DateTime](JsNumber(time.getMillis))
-      read.map(dt => utc(dt) must_== time).getOrElse(failure("not a success"))
+    "read from long format" in {
+      check(transformFirst[DateTime, JsNumber](dt => JsNumber(dt.getMillis)))
     }
+  }
+
+  def transformFirst[T: Arbitrary : Reads, X <: JsValue](f: T => X) = Prop.forAll { (o: T) =>
+    val after = f(o)
+    val read = fromJson[T](after)
+    read.map(f(_)) must beSuccess(after)
+  }
+
+  def toAndFrom[T : Reads : Writes : Arbitrary] = Prop.forAll { (o: T) =>
+    val wrote = toJson(o)
+    val read = fromJson[T](wrote)
+    read must beSuccess(o)
   }
 }

@@ -1,6 +1,7 @@
 package jsonz
 import scalaz.{Success, Failure, NonEmptyList, Validation, ValidationNel}
 import org.scalacheck.{Arbitrary, Prop}
+import scala.language.higherKinds
 
 object ValidationFormatsSpec extends JsonzSpec with ValidationFormats {
   import DefaultFormats._

@@ -5,7 +5,7 @@ import org.scalacheck.Arbitrary
 import scalaz.scalacheck.ScalazProperties._
 import scalaz.scalacheck.ScalazArbitrary._
 
-object JsValueInstancesSpec extends SpecLite with JsonzSpec with JsValueInstances {
+object JsValueInstancesSpec extends JsonzSpec with JsValueInstances {
   import scalaz.std.string._
   import scalaz.std.math.bigDecimal._
   import org.scalacheck.Arbitrary._

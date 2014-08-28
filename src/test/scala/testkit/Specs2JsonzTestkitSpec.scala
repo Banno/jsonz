@@ -1,8 +1,9 @@
-package jsonz.testkit
+package jsonz.specs2
 import jsonz._
 import org.specs2.mutable.Specification
 
 object Specs2JsonzTestkitSpec extends Specification with Specs2JsonzTestkit {
+  import DefaultFormats._
 
   "The Specs2JsonzTestkit" should {
     "validate on haveJsonField" in {
@@ -28,14 +29,9 @@ object Specs2JsonzTestkitSpec extends Specification with Specs2JsonzTestkit {
       obj must haveJsonFieldOfSize('names, 2)
     }
 
-    "validate on haveUUIDJsonField" in {
-      val obj = JsObject("id" -> JsString("550e8400-e29b-41d4-a716-446655440000") :: Nil)
-      obj must haveUUIDJsonField('id)
-    }
-
     "validate on notHaveJsonField" in {
       val obj = JsObject(Nil)
-      obj must notHaveJsonField('name)
+      obj must not(haveJsonField('name))
     }
 
     "validate on beSuccessWhich" in {

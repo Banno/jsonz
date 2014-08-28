@@ -8,12 +8,17 @@ package object models {
   import Fields._
 
   import Validation._
-
   import Arbitrary._
 
   case class Name(first: String, middle: Option[String], last: String)
   case class Person(name: Name, age: Int)
   val person = Person(Name("Luke", None, "Amdor"), 28)
+
+  object Animals extends Enumeration {
+    val Tiger = Value
+    val Lion = Value
+    val Swallow = Value
+  }
 
   implicit val nameArb = Arbitrary {
     for {
@@ -90,7 +95,7 @@ package object models {
 
 
   implicit lazy val arbJsValue: Arbitrary[JsValue] = Arbitrary {
-    val genJsNull = Gen.value(JsNull)
+    val genJsNull = Gen.const(JsNull)
     val genJsBoolean = for { b <- arbitrary[Boolean] } yield JsBoolean(b)
     val genJsString = for { s <- arbitrary[String] } yield JsString(s)
     val genJsNumber = for { bd <- arbitrary[Float] } yield JsNumber(bd)
@@ -102,7 +107,7 @@ package object models {
 
     def genJsObject(size: Int) = for {
       n  <- Gen.choose(0, size / 25)
-      fields <- Gen.listOfN(n, arbitrary[Pair[String, JsValue]])
+      fields <- Gen.listOfN(n, arbitrary[Tuple2[String, JsValue]])
     } yield JsObject(fields)
 
     Gen.sized { size =>
@@ -132,5 +137,17 @@ package object models {
       (4, genJsFailureStatement),
       (1, genJsFieldFailure)
     )
+  }
+
+  implicit def leftArb[T: Arbitrary]: Arbitrary[Left[T, _]] = Arbitrary {
+    for {
+      value <- Arbitrary.arbitrary[T]
+    } yield Left(value)
+  }
+
+  implicit def rightArb[T: Arbitrary]: Arbitrary[Right[T, _]] = Arbitrary {
+    for {
+      value <- Arbitrary.arbitrary[T]
+    } yield Right(value)
   }
 }

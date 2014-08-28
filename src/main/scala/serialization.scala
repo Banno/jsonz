@@ -197,15 +197,15 @@ private[jsonz] trait Generator extends Factory {
   }
 
   def generate[A](obj: A, output: Writer) {
-    generate(obj, factory.createJsonGenerator(output))
+    generate(obj, factory.createGenerator(output))
   }
 
   def generate[A](obj: A, output: OutputStream) {
-    generate(obj, factory.createJsonGenerator(output, JsonEncoding.UTF8))
+    generate(obj, factory.createGenerator(output, JsonEncoding.UTF8))
   }
 
   def generate[A](obj: A, output: File) {
-    generate(obj, factory.createJsonGenerator(output, JsonEncoding.UTF8))
+    generate(obj, factory.createGenerator(output, JsonEncoding.UTF8))
   }
 
   private def generate[A](obj: A, generator: JsonGenerator) {
@@ -222,17 +222,17 @@ private[jsonz] trait Parser extends Factory {
   import com.fasterxml.jackson.databind.node.TreeTraversingParser
   import java.io.{EOFException, Reader, File, InputStream}
 
-  def parse[A](input: String)(implicit mf: Manifest[A]): A = parse[A](factory.createJsonParser(input), mf)
+  def parse[A](input: String)(implicit mf: Manifest[A]): A = parse[A](factory.createParser(input), mf)
 
-  def parse[A](input: InputStream)(implicit mf: Manifest[A]): A = parse[A](factory.createJsonParser(input), mf)
+  def parse[A](input: InputStream)(implicit mf: Manifest[A]): A = parse[A](factory.createParser(input), mf)
 
-  def parse[A](input: File)(implicit mf: Manifest[A]): A = parse[A](factory.createJsonParser(input), mf)
+  def parse[A](input: File)(implicit mf: Manifest[A]): A = parse[A](factory.createParser(input), mf)
 
-  def parse[A](input: URL)(implicit mf: Manifest[A]): A = parse[A](factory.createJsonParser(input), mf)
+  def parse[A](input: URL)(implicit mf: Manifest[A]): A = parse[A](factory.createParser(input), mf)
 
-  def parse[A](input: Reader)(implicit mf: Manifest[A]): A = parse[A](factory.createJsonParser(input), mf)
+  def parse[A](input: Reader)(implicit mf: Manifest[A]): A = parse[A](factory.createParser(input), mf)
 
-  def parse[A](input: Array[Byte])(implicit mf: Manifest[A]): A = parse[A](factory.createJsonParser(input), mf)
+  def parse[A](input: Array[Byte])(implicit mf: Manifest[A]): A = parse[A](factory.createParser(input), mf)
 
   def parse[A](input: Source)(implicit mf: Manifest[A]): A = parse[A](input.mkString)
 

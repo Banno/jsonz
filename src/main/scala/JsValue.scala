@@ -9,4 +9,6 @@ case class JsArray(elements: Seq[JsValue]) extends JsValue // why seq and not it
 case class JsObject(fields: Seq[(String, JsValue)]) extends JsValue {
   def get(key: String): Option[JsValue] =
     fields.find(p => p._1 == key).map(p => p._2)
+
+  def ++(other: JsObject) = JsObject(fields ++ other.fields)
 }

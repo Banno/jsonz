@@ -39,12 +39,14 @@ libraryDependencies <++= (scalaVersion) { (sv) =>
     if (sv.startsWith("2.11"))
       Seq(
         "io.spray" % "spray-httpx" % "1.3.1" % "provided",
-        "com.typesafe.akka" %% "akka-actor" % "2.3.3" % "provided"
+        "com.typesafe.akka" %% "akka-actor" % "2.3.3" % "provided",
+        "org.specs2" %% "specs2" % "2.3.12" % "provided"
       )
     else
       Seq(
         "io.spray" % "spray-httpx" % "1.1.1" % "provided",
-        "com.typesafe.akka" %% "akka-actor" % "2.1.4" % "provided"
+        "com.typesafe.akka" %% "akka-actor" % "2.1.4" % "provided",
+        "org.specs2" %% "specs2" % "2.3.12" % "provided"
       )
 }
 

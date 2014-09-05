@@ -14,8 +14,7 @@ resolvers ++= Seq(
   "Sonatype Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots",
   "Sonatype Releases" at "https://oss.sonatype.org/content/repositories/releases",
   "spray.io" at "http://repo.spray.io/",
-  "Typesafe Releases" at "http://repo.typesafe.com/typesafe/releases/",
-  "Coda Hale" at "http://repo.codahale.com"
+  "Typesafe Releases" at "http://repo.typesafe.com/typesafe/releases/"
 )
 
 publishTo := Some("Banno Snapshots Repo" at "http://nexus.banno.com/nexus/content/repositories/snapshots")

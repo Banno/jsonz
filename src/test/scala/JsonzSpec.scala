@@ -16,8 +16,9 @@ trait JsonzSpec extends Specification with ScalaCheck with MatchersImplicits wit
         }
     }
 
-  def beSuccess[A, B](b: B): Matcher[ValidationNel[A, B]] =
-    ((v: ValidationNel[A, B]) => v.map(_ must beEqualTo(b)).toOption.map(_ => success) getOrElse failure("not a success"))
+  def beSuccess[A, B](b: B): Matcher[ValidationNel[A, B]] = { v: ValidationNel[A, B] =>
+    v.map(_ == b).toOption.map(_ => success) getOrElse failure("not a success")
+  }
 
     def beSuccess: Matcher[ValidationNel[_, _]] =
     ((v: ValidationNel[_, _]) => if (v.isSuccess) success else failure("not a success"))

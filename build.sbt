@@ -2,7 +2,7 @@ name := "jsonz"
 
 organization := "jsonz"
 
-version := "0.7-SNAPSHOT"
+version := "1.0-SNAPSHOT"
 
 scalaVersion := "2.11.1"
 
@@ -22,8 +22,8 @@ publishTo := Some("Banno Snapshots Repo" at "http://nexus.banno.com/nexus/conten
 credentials += Credentials(Path.userHome / ".ivy2" / ".banno_credentials")
 
 libraryDependencies ++= Seq(
-  "org.scalaz" %% "scalaz-core" % "7.0.6",
-  "org.scalaz" %% "scalaz-typelevel" % "7.0.6",
+  "org.scalaz" %% "scalaz-core" % "7.1.0",
+  "org.scalaz" %% "scalaz-typelevel" % "7.1.0",
   "com.fasterxml.jackson.module" %% "jackson-module-scala" % "2.4.1"
 )
 
@@ -38,30 +38,23 @@ libraryDependencies ++= {
   if (scalaVersion.value.startsWith("2.11"))
     Seq(
       "io.spray" % "spray-httpx" % "1.3.1" % "provided",
-      "com.typesafe.akka" %% "akka-actor" % "2.3.3" % "provided",
-      "org.specs2" %% "specs2" % "2.3.12" % "provided"
+      "com.typesafe.akka" %% "akka-actor" % "2.3.3" % "provided"
     )
   else
     Seq(
       "io.spray" % "spray-httpx" % "1.1.1" % "provided",
-      "com.typesafe.akka" %% "akka-actor" % "2.1.4" % "provided",
-      "org.specs2" %% "specs2" % "2.2.3" % "provided"
+      "com.typesafe.akka" %% "akka-actor" % "2.1.4" % "provided"
     )
 }
 
 // specs2 support
-libraryDependencies += {
-  if (scalaVersion.value.startsWith("2.11"))
-    "org.specs2" %% "specs2" % "2.3.12" % "provided"
-  else
-    "org.specs2" %% "specs2" % "2.2.3" % "provided"
-}
+libraryDependencies += "org.specs2" %% "specs2" % "2.4.2" % "provided"
 
 // test deps
 libraryDependencies ++=
   Seq(
-    "org.scalacheck" %% "scalacheck" % "1.10.1" % "test",
-    "org.scalaz" %% "scalaz-scalacheck-binding" % "7.0.6" % "test"
+    "org.scalacheck" %% "scalacheck" % "1.11.5" % "test",
+    "org.scalaz" %% "scalaz-scalacheck-binding" % "7.1.0" % "test"
   )
   
 

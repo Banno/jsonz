@@ -20,18 +20,18 @@ object ProductFormatsSpecs extends JsonzSpec {
   "easy product formats" ! {
     val test = Testing3("abc", Some(Testing2("def", None)), 123)
     val result = fromJson[Testing3](toJson(test))
-    result must beSuccess(test)
+    result must beSuccessful(test)
   }
 
   "allow for optional fields to not have to be present in the json" ! {
     val result = fromJson[Testing2](JsObject(Seq("one" -> JsString("hello"))))
-    result must beSuccess(Testing2("hello", None))
+    result must beSuccessful(Testing2("hello", None))
   }
 
   "allow for optional optional fields that are null to be Some(None)" ! {
-    fromJson[Testing4](JsObject(Seq("one" -> JsString("hello"), "two" -> JsNull))) must beSuccess(Testing4("hello", Some(None)))
-    fromJson[Testing4](JsObject(Seq("one" -> JsString("hello"), "two" -> JsNumber(2)))) must beSuccess(Testing4("hello", Some(Some(2))))
-    fromJson[Testing4](JsObject(Seq("one" -> JsString("hello")))) must beSuccess(Testing4("hello", None))
+    fromJson[Testing4](JsObject(Seq("one" -> JsString("hello"), "two" -> JsNull))) must beSuccessful(Testing4("hello", Some(None)))
+    fromJson[Testing4](JsObject(Seq("one" -> JsString("hello"), "two" -> JsNumber(2)))) must beSuccessful(Testing4("hello", Some(Some(2))))
+    fromJson[Testing4](JsObject(Seq("one" -> JsString("hello")))) must beSuccessful(Testing4("hello", None))
   }
 
   "collect errors" ! {
@@ -43,6 +43,6 @@ object ProductFormatsSpecs extends JsonzSpec {
 
   "allow for product-1's" ! {
     val result = fromJson[Testing1](JsObject(Seq("one" -> JsString("hello"))))
-    result must beSuccess(Testing1("hello"))
+    result must beSuccessful(Testing1("hello"))
   }
 }

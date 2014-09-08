@@ -24,7 +24,7 @@ object ReadWriteJsonSpec extends JsonzSpec {
     val jsStr = """{"name":{"first":"Luke","middle": null, "last":"Amdor"},"age":28}"""
     val js = Jsonz.parse(jsStr)
     val pV = Jsonz.fromJson[Person](js.toOption.get)
-    pV must beSuccess(person)
+    pV must beSuccessful(person)
   }
 
   "allow an optional field not to have to be there" in {

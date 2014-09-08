@@ -9,7 +9,7 @@ object SerializationSpec extends JsonzSpec {
   "Writes arbitrary JsValue's to and from strings" ! check { js: JsValue =>
     val wrote = Jsonz.toJsonStr(js)
     val read = Jsonz.fromJsonStr[JsValue](wrote)
-    read must beSuccess(js)
+    read must beSuccessful(js)
   }
 
   "\"null\" should translate to a JsNull not null" ! {
@@ -35,7 +35,7 @@ object SerializationSpec extends JsonzSpec {
   "to/from bytes" ! check { js: JsValue =>
     val wrote: Array[Byte] = Jsonz.toJsonBytes(js)
     val read = Jsonz.fromJsonBytes[JsValue](wrote)
-    read must beSuccess(js)
+    read must beSuccessful(js)
   }
 
   "to/from Input/Output streams" ! check { js: JsValue =>
@@ -47,7 +47,7 @@ object SerializationSpec extends JsonzSpec {
     val in = new ByteArrayInputStream(out.toByteArray)
     val read = Jsonz.fromJsonInputStream[JsValue](in)
 
-    read must beSuccess(js)
+    read must beSuccessful(js)
   }
 
 

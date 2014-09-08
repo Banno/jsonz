@@ -33,12 +33,12 @@ object JodaTimeFormatsSpec extends JsonzSpec with ScalaCheck with JodaTimeFormat
   def transformFirst[T: Arbitrary : Reads, X <: JsValue](f: T => X) = Prop.forAll { (o: T) =>
     val after = f(o)
     val read = fromJson[T](after)
-    read.map(f(_)) must beSuccess(after)
+    read.map(f(_)) must beSuccessful(after)
   }
 
   def toAndFrom[T : Reads : Writes : Arbitrary] = Prop.forAll { (o: T) =>
     val wrote = toJson(o)
     val read = fromJson[T](wrote)
-    read must beSuccess(o)
+    read must beSuccessful(o)
   }
 }

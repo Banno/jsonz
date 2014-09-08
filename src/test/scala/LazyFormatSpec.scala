@@ -12,6 +12,6 @@ object LazyFormatSpec extends JsonzSpec {
   "use lazy format for recursive types" in {
     val recursive = RecursiveType(List(RecursiveType(Nil)))
     val js = toJson(recursive)
-    fromJson[RecursiveType](js) must beSuccess(recursive)
+    fromJson[RecursiveType](js) must beSuccessful(recursive)
   }
 }

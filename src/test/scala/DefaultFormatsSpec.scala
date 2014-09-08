@@ -159,27 +159,27 @@ object DefaultFormatsSpec extends JsonzSpec {
   "Left's and Right's shouldn't be able to read other formats though" ! {
     val model1: Either[Int, String] = Left(100)
 
-    fromJson[String](toJson(model1)) must not(beSuccess)
-    fromJson[List[Int]](toJson(model1)) must not(beSuccess)
-    fromJson[Either[Boolean, Boolean]](toJson(model1)) must not(beSuccess)
-    fromJson[Either[List[Int], Map[String, Int]]](toJson(model1)) must not(beSuccess)
+    fromJson[String](toJson(model1)) must not(beSuccessful)
+    fromJson[List[Int]](toJson(model1)) must not(beSuccessful)
+    fromJson[Either[Boolean, Boolean]](toJson(model1)) must not(beSuccessful)
+    fromJson[Either[List[Int], Map[String, Int]]](toJson(model1)) must not(beSuccessful)
   }
 
   def transformFirst[T: Arbitrary : Reads, X <: JsValue](f: T => X) = Prop.forAll { (o: T) =>
     val after = f(o)
     val read = fromJson[T](after)
-    read.map(f(_)) must beSuccess(after)
+    read.map(f(_)) must beSuccessful(after)
   }
 
   def toAndFrom[M[_], T: Reads : Writes : Arbitrary](builder: T => M[T])(implicit mw: Writes[M[T]]) = Prop.forAll { (o: T) =>
     val wrote = toJson(builder(o))
     val read = fromJson[T](wrote)
-    read must beSuccess(o)
+    read must beSuccessful(o)
   }
 
   def toAndFrom[T : Reads : Writes : Arbitrary] = Prop.forAll { (o: T) =>
     val wrote = toJson(o)
     val read = fromJson[T](wrote)
-    read must beSuccess(o)
+    read must beSuccessful(o)
   }
 }

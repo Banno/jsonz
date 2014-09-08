@@ -54,6 +54,7 @@ libraryDependencies += "org.specs2" %% "specs2" % "2.4.2" % "provided"
 libraryDependencies ++=
   Seq(
     "org.scalacheck" %% "scalacheck" % "1.11.5" % "test",
+    "org.typelevel" %% "scalaz-specs2" % "0.3.0" % "test",
     "org.scalaz" %% "scalaz-scalacheck-binding" % "7.1.0" % "test"
   )
   

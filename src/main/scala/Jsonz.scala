@@ -1,9 +1,9 @@
 package jsonz
 import scalaz.{Failure, Success, Validation, ValidationNel}
+import scalaz.Validation.FlatMap._
 
 object Jsonz {
   import JsFailure._
-  import Validation._
 
   def toJsonStr[T: Writes](o: T) = stringify(toJson(o))
   def fromJsonStr[T: Reads](str: String) = parse(str).flatMap(fromJson[T])
@@ -26,7 +26,7 @@ object Jsonz {
   def stringify(js: JsValue): String = JacksonJson.generate(js)
 
   private[this] def tryToParse(f: => JsValue): JsonzValidation[JsValue] = try {
-    success(f).toValidationNel
+    Validation.success(f).toValidationNel
   } catch {
     case _: ParsingException => jsFailureValidationNel("not valid JSON")
   }

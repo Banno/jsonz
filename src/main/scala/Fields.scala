@@ -1,10 +1,10 @@
 package jsonz
-import scalaz._
+import scalaz.{Validation, ValidationNel}
+import scalaz.Validation.FlatMap._
 
 object Fields extends Fields
 
 trait Fields {
-  import Validation._
   import JsFailure._
 
   def field[T](name: String, js: JsValue)(implicit fieldReads: Reads[T], manifest: Manifest[T]): JsonzValidation[T] = js match {
@@ -12,7 +12,7 @@ trait Fields {
       val maybeFromJson = jso.get(name) map fieldReads.reads
       maybeFromJson.map(groupFieldJsFailures(name)) getOrElse {
         if (classOf[Option[_]].isAssignableFrom(manifest.runtimeClass)) {
-          success(None.asInstanceOf[T])
+          Validation.success(None.asInstanceOf[T])
         } else {
           jsFailureValidationNel(name, "is missing")
         }

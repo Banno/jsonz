@@ -39,30 +39,23 @@ libraryDependencies ++= {
   if (scalaVersion.value.startsWith("2.11"))
     Seq(
       "io.spray" % "spray-httpx" % "1.3.1" % "provided",
-      "com.typesafe.akka" %% "akka-actor" % "2.3.3" % "provided",
-      "org.specs2" %% "specs2" % "2.4.1" % "provided"
+      "com.typesafe.akka" %% "akka-actor" % "2.3.3" % "provided"
     )
   else
     Seq(
       "io.spray" % "spray-httpx" % "1.1.1" % "provided",
-      "com.typesafe.akka" %% "akka-actor" % "2.1.4" % "provided",
-      "org.specs2" %% "specs2" % "2.4.1" % "provided"
+      "com.typesafe.akka" %% "akka-actor" % "2.1.4" % "provided"
     )
 }
 
 // specs2 support
-libraryDependencies += {
-  if (scalaVersion.value.startsWith("2.11"))
-    "org.specs2" %% "specs2" % "2.3.12" % "provided"
-  else
-    "org.specs2" %% "specs2" % "2.2.3" % "provided"
-}
+libraryDependencies += "org.specs2" %% "specs2" % "2.4.2" % "provided"
 
 // test deps
 libraryDependencies ++=
   Seq(
-    "org.scalacheck" %% "scalacheck" % "1.10.1" % "test",
-    "org.scalaz" %% "scalaz-scalacheck-binding" % "7.0.6" % "test"
+    "org.scalacheck" %% "scalacheck" % "1.11.5" % "test",
+    "org.scalaz" %% "scalaz-scalacheck-binding" % "7.1.0" % "test"
   )
   
 

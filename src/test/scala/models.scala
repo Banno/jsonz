@@ -31,7 +31,7 @@ package object models {
   implicit val personArb = Arbitrary {
     for {
       name <- arbitrary[Name]
-      age <- arbitrary[Int] suchThat (i => i >= 0 && i <= 200)
+      age <- Gen.choose(0, 200)
     } yield Person(name, age)
   }
 

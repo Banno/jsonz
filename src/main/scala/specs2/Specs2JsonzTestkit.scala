@@ -35,6 +35,10 @@ trait Specs2JsonzTestkit extends MatchersImplicits {
     ((js: JsValue) => extract[Seq[JsValue]](js, field).map(_.size == expectedSize).getOrElse(false),
      (js: JsValue) => s"""$js field $field of %s did not have size $expectedSize""".format(extract[Seq[JsValue]](js, field).getOrElse(s"'${field} not there!'")))
 
+  def haveJsonFieldWhichContains[T <: JsValue](field: Symbol, containsField: Symbol, expected: T): Matcher[JsValue] =
+    ((js: JsValue) => extract[JsValue](js, field).flatMap(_.asInstanceOf[JsArray].elements.flatMap(_.asInstanceOf[JsObject].get(containsField.name).map(_ == expected)).find(b => b)).getOrElse(false),
+     (js: JsValue) => s"""$js \n\tdoesn't have field $field or nested field $containsField""")
+
   def beSuccessWhich[T](f: (T => Boolean)): Matcher[Validation[_,T]] =
     ((v: Validation[_,T]) => v.exists(f), (v: Validation[_,T]) => s"""$v did not match""")
 

@@ -4,9 +4,9 @@ organization := "jsonz"
 
 version := "1.0-SNAPSHOT"
 
-scalaVersion := "2.11.1"
+scalaVersion := "2.11.2"
 
-crossScalaVersions := Seq("2.11.1", "2.10.4")
+crossScalaVersions := Seq("2.11.2", "2.10.4")
 
 scalacOptions ++= Seq("-deprecation", "-feature", "-unchecked")
 
@@ -57,5 +57,3 @@ libraryDependencies ++=
     "org.typelevel" %% "scalaz-specs2" % "0.3.0" % "test",
     "org.scalaz" %% "scalaz-scalacheck-binding" % "7.1.0" % "test"
   )
-  
-

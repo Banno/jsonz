@@ -4,9 +4,9 @@ organization := "jsonz"
 
 version := "1.0-SNAPSHOT"
 
-scalaVersion := "2.11.2"
+scalaVersion := "2.11.3"
 
-crossScalaVersions := Seq("2.11.2", "2.10.4")
+crossScalaVersions := Seq("2.11.3", "2.10.4")
 
 scalacOptions ++= Seq("-deprecation", "-feature", "-unchecked")
 
@@ -14,7 +14,8 @@ resolvers ++= Seq(
   "Sonatype Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots",
   "Sonatype Releases" at "https://oss.sonatype.org/content/repositories/releases",
   "spray.io" at "http://repo.spray.io/",
-  "Typesafe Releases" at "http://repo.typesafe.com/typesafe/releases/"
+  "Typesafe Releases" at "http://repo.typesafe.com/typesafe/releases/",
+  "Scalaz Bintray Repo" at "http://dl.bintray.com/scalaz/releases"
 )
 
 publishTo := Some("Banno Snapshots Repo" at "http://nexus.banno.com/nexus/content/repositories/snapshots")
@@ -24,6 +25,7 @@ credentials += Credentials(Path.userHome / ".ivy2" / ".banno_credentials")
 libraryDependencies ++= Seq(
   "org.scalaz" %% "scalaz-core" % "7.1.0",
   "org.scalaz" %% "scalaz-typelevel" % "7.1.0",
+  "org.scalaz.stream" %% "scalaz-stream" % "0.5a",
   "com.fasterxml.jackson.module" %% "jackson-module-scala" % "2.4.1"
 )
 
@@ -48,12 +50,12 @@ libraryDependencies ++= {
 }
 
 // specs2 support
-libraryDependencies += "org.specs2" %% "specs2" % "2.4.2" % "provided"
+libraryDependencies += "org.specs2" %% "specs2" % "2.4.6" % "provided"
 
 // test deps
 libraryDependencies ++=
   Seq(
-    "org.scalacheck" %% "scalacheck" % "1.11.5" % "test",
+    "org.scalacheck" %% "scalacheck" % "1.11.6" % "test",
     "org.typelevel" %% "scalaz-specs2" % "0.3.0" % "test",
     "org.scalaz" %% "scalaz-scalacheck-binding" % "7.1.0" % "test"
   )

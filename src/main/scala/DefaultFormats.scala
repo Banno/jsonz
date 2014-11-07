@@ -210,4 +210,13 @@ trait DefaultFormats {
       case Right(v) => rf.writes(v)
     }
   }
+
+  class TaggedOptionalFormat[S, T](implicit tr: Reads[S], tw: Writes[S], m: Manifest[S]) extends Format[Option[S @@ T]] {
+    def reads(js: JsValue) = js match {
+      case JsNull if classOf[Option[_]].isAssignableFrom(m.runtimeClass) => tr.reads(JsNull).map(Some(_).map(Tag[S, T](_)))
+      case JsNull => success(None)
+      case jsv => tr.reads(jsv).map(Some(_).map(Tag[S, T](_)))
+    }
+    def writes(o: Option[S @@ T]) = o.map(Tag.unwrap).map(tw.writes).getOrElse(JsNull)
+  }
 }

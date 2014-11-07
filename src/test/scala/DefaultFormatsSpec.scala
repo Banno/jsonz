@@ -2,7 +2,7 @@ package jsonz
 import jsonz.models._
 import scala.language.higherKinds
 import org.scalacheck.{Arbitrary, Prop}
-import scalaz.{NonEmptyList, Success, Failure, ValidationNel}
+import scalaz._
 
 object DefaultFormatsSpec extends JsonzSpec {
   import DefaultFormats._
@@ -124,6 +124,14 @@ object DefaultFormatsSpec extends JsonzSpec {
   "Option[Map[String, List[Int]]]" ! check(toAndFrom[Option[Map[String, List[Int]]]])
   "Option failures" ! {
     fromJson[Option[Int]](JsString("abc")) must containJsFailureStatement("not an int")
+  }
+
+  sealed trait NonEmpty
+  type NonEmptyString = String @@ NonEmpty
+  implicit object OptionalNonEmptyStringFormat extends TaggedOptionalFormat[String, NonEmpty]
+  "Option[NonEmptyString] (Option[String @@ NonEmpty])" ! {
+    val nonEmptyString: Option[NonEmptyString] = Some(Tag[String, NonEmpty]("non empty string"))
+    fromJson[Option[NonEmptyString]](toJson(nonEmptyString)).toOption must beSome.which{ _ must_== nonEmptyString }
   }
 
   "NonEmptyList[Int]" ! check(toAndFrom[NonEmptyList[Int]])

@@ -24,7 +24,8 @@ credentials += Credentials(Path.userHome / ".ivy2" / ".banno_credentials")
 libraryDependencies ++= Seq(
   "org.scalaz" %% "scalaz-core" % "7.1.0",
   "org.scalaz" %% "scalaz-typelevel" % "7.1.0",
-  "com.fasterxml.jackson.module" %% "jackson-module-scala" % "2.4.1"
+  "com.fasterxml.jackson.module" %% "jackson-module-scala" % "2.4.1",
+  "com.typesafe.akka" %% "akka-actor" % "2.3.6" % "provided"
 )
 
 // joda datetime support
@@ -37,13 +38,11 @@ libraryDependencies ++= Seq(
 libraryDependencies ++= {
   if (scalaVersion.value.startsWith("2.11"))
     Seq(
-      "io.spray" % "spray-httpx" % "1.3.1" % "provided",
-      "com.typesafe.akka" %% "akka-actor" % "2.3.3" % "provided"
+      "io.spray" % "spray-httpx" % "1.3.1" % "provided"
     )
   else
     Seq(
-      "io.spray" % "spray-httpx" % "1.1.1" % "provided",
-      "com.typesafe.akka" %% "akka-actor" % "2.1.4" % "provided"
+      "io.spray" % "spray-httpx" % "1.1.1" % "provided"
     )
 }
 

@@ -97,6 +97,7 @@ trait DefaultFormats {
     def writes(o: Option[T]) = o.map(tw.writes).getOrElse(JsNull)
   }
 
+
   implicit def mapFormat[V](implicit vr: Reads[V], vw: Writes[V]): Format[Map[String, V]] = new Format[Map[String, V]] {
     import scalaz.std.list._
     import scalaz.syntax.traverse._
@@ -209,14 +210,5 @@ trait DefaultFormats {
       case Left(v) => lf.writes(v)
       case Right(v) => rf.writes(v)
     }
-  }
-
-  class TaggedOptionalFormat[S, T](implicit tr: Reads[S], tw: Writes[S], m: Manifest[S]) extends Format[Option[S @@ T]] {
-    def reads(js: JsValue) = js match {
-      case JsNull if classOf[Option[_]].isAssignableFrom(m.runtimeClass) => tr.reads(JsNull).map(Some(_).map(Tag[S, T](_)))
-      case JsNull => success(None)
-      case jsv => tr.reads(jsv).map(Some(_).map(Tag[S, T](_)))
-    }
-    def writes(o: Option[S @@ T]) = o.map(Tag.unwrap).map(tw.writes).getOrElse(JsNull)
   }
 }

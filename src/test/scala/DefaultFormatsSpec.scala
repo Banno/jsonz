@@ -126,14 +126,6 @@ object DefaultFormatsSpec extends JsonzSpec {
     fromJson[Option[Int]](JsString("abc")) must containJsFailureStatement("not an int")
   }
 
-  sealed trait NonEmpty
-  type NonEmptyString = String @@ NonEmpty
-  implicit object OptionalNonEmptyStringFormat extends TaggedOptionalFormat[String, NonEmpty]
-  "Option[NonEmptyString] (Option[String @@ NonEmpty])" ! {
-    val nonEmptyString: Option[NonEmptyString] = Some(Tag[String, NonEmpty]("non empty string"))
-    fromJson[Option[NonEmptyString]](toJson(nonEmptyString)).toOption must beSome.which{ _ must_== nonEmptyString }
-  }
-
   "NonEmptyList[Int]" ! check(toAndFrom[NonEmptyList[Int]])
   "NonEmptyList failures" ! {
     fromJson[NonEmptyList[String]](JsObject(Nil)) must containJsFailureStatement("not an array")

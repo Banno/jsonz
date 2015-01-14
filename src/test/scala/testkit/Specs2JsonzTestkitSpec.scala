@@ -8,6 +8,7 @@ object Specs2JsonzTestkitSpec extends Specification with Specs2JsonzTestkit {
   "The Specs2JsonzTestkit" should {
     "validate on haveJsonField" in {
       val obj = JsObject("name" -> JsString("Adam") :: "address" -> JsNull:: Nil)
+      obj must haveJsonField('name)
       obj must haveJsonField('name, "Adam")
       obj must not(haveJsonField('age, 100))
       obj must haveNullJsonField('address)

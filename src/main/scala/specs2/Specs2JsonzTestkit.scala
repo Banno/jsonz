@@ -14,7 +14,7 @@ trait Specs2JsonzTestkit extends MatchersImplicits {
 
  def haveJsonField(field: Symbol): Matcher[JsValue] =
     ((js: JsValue) => js match {
-       case JsObject(fields) => fields.exists { case (key, _) => key == field }
+       case JsObject(fields) => fields.exists { case (key, _) => key == field.name }
        case _                => false
      },
      (js: JsValue) => s"""$js does not have field %s""".format(js, field))

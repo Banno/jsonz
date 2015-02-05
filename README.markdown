@@ -163,6 +163,10 @@ object Formats extends DefaultFormats {
 
 Mixing in the `jsonz.JsValueInstances` (which extends from `jsonz.JsValueEquality`) will provide `scalaz.Monoid` and `scalaz.Equal` instances for `JsValue`'s sub types, but not `JsValue` itself. These are often useful if you want to combine two like subtypes of `JsValue`.
 
+# Contributing
+
+Create a PR against master and we'll take a looksie at it. If it passes CI builds it'll probably be merged.
+
 # License
 
 This is released under the Apache License, Version 2.0. See [LICENSE][License]

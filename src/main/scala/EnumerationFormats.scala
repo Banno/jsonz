@@ -30,7 +30,7 @@ trait ScalaEnumerationFormats {
 
     def reads(js: JsValue): JsonzValidation[E#Value] = js match {
       case JsString(str) => findValueOrFailure(str)
-      case jsv => JsFailure.jsFailureValidationNel(s"not one of enumeration.values.toList")
+      case jsv => JsFailure.jsFailureValidationNel(s"not one of ${enumeration.values.toList}")
     }
 
     def writes(e: E#Value): JsValue = JsString(e.toString)

@@ -4,6 +4,18 @@
 
 jsonz is a library that implements json serialization and deserialization via typeclasses in scala.
 
+# Getting
+
+> build.sbt
+
+```scala
+resolvers += Resolver.url("bintray-banno-oss-releases", url("http://dl.bintray.com/banno/oss"))(Resolver.ivyStylePatterns)
+
+libraryDependencies ++= Seq(
+  "jsonz" %% "jsonz" % "0.10.1"
+)
+```
+
 # Differences between other json parsing libraries
 
 ## Default Values

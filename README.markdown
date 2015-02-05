@@ -35,7 +35,7 @@ object DefaultValues {
 
 ## Failures
 
-Jsonz is different about failures. When parsing json failures are accumulated and delivered at the end. The type `JsonzValidation[T]` is a type alias for scalaz's `Validation[NonEmptyList[JsFailure], T]` so the user will receive either a `scalaz.Success` with an instance of the model filled in with the data from the json, or a `scalaz.Failure` that contains failures that occured duirng parsing. These failures could be from missing fields, or malformly typed elements.
+Jsonz is different about failures. When parsing json, failures are accumulated and delivered at the end. The type `JsonzValidation[T]` is a type alias for scalaz's `Validation[NonEmptyList[JsFailure], T]` so the user will receive either a `scalaz.Success` with an instance of the model filled in with the data from the json, or a `scalaz.Failure` that contains failures that occured duirng parsing. These failures could be from missing fields, or malformly typed elements.
 
 ### No Exceptions
 
@@ -110,7 +110,7 @@ import jsonz.joda.JodaTimeFormats._
 
 ### Spray
 
-Spray versions 1.1.x, 1.2.x, and 1.3.x are supported to read entit ies and complete requests as json via jsonz. To use the following import will need to be used, or to mixin the associated trait under the same name.
+Spray versions 1.1.x, 1.2.x, and 1.3.x are supported to read entities and complete requests as json via jsonz. To use the following import will need to be used, or to mixin the associated trait under the same name.
 
 > Note: Check the [build.sbt](build.sbt) for the specific version jsonz relies on.
 

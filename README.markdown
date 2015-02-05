@@ -9,7 +9,7 @@ jsonz is a library that implements json serialization and deserialization via ty
 > build.sbt
 
 ```scala
-resolvers += Resolver.url("bintray-banno-oss-releases", url("http://dl.bintray.com/banno/oss"))(Resolver.ivyStylePatterns)
+resolvers += "bintray-banno-oss-releases" at "http://dl.bintray.com/banno/oss"
 
 libraryDependencies ++= Seq(
   "jsonz" %% "jsonz" % "0.10.1"

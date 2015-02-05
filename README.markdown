@@ -89,6 +89,8 @@ implicit lazy val RecursiveTypeFormat: Format[RecursiveType] = lazyFormat(produc
 
 Joda-Time is typically the first library chosen for performing date/time operations on the JVM. Jsonz offers support for reading and writing it's `org.joda.time.DateTime` class via the following imports. The formats used to try and parse are: `ISO 8601` (with and without millis), `yyyy-MM-dd`, and [RFC 1123](https://tools.ietf.org/html/rfc1123) (EEE, dd MMM yyyy HH:mm:ss 'GMT').
 
+> Note: Check the [build.sbt](build.sbt) for the specific version jsonz relies on.
+
 ```scala
 import jsonz._
 import jsonz.joda.JodaTimeFormats._
@@ -98,6 +100,8 @@ import jsonz.joda.JodaTimeFormats._
 
 Spray versions 1.1.x, 1.2.x, and 1.3.x are supported to read entit ies and complete requests as json via jsonz. To use the following import will need to be used, or to mixin the associated trait under the same name.
 
+> Note: Check the [build.sbt](build.sbt) for the specific version jsonz relies on.
+
 ```scala
 import jsonz.spray.JsonzMarshalling._ // companion object
 import jsonz.spray.JsonzMarshalling   // trait
@@ -106,6 +110,8 @@ import jsonz.spray.JsonzMarshalling   // trait
 ### Specs2
 
 Specs2 matchers are provided by jsonz. In order to use them simply mix in (or import via the companion object) `jsonz.specs2.Specs2JsonzTestkit`. Then the following matchers are visible. For examples refer to the [test over these matchers](src/test/scala/testkit/Specs2JsonzTestkitSpec.scala).
+
+> Note: Check the [build.sbt](build.sbt) for the specific version jsonz relies on.
 
 ```scala
 def haveJsonField[T](field: Symbol, expected: T)(implicit tr: Reads[T], m: Manifest[T]): Matcher[JsValue]

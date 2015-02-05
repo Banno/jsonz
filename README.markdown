@@ -124,7 +124,7 @@ def haveFailureCount[A, B](n: Int): Matcher[ValidationNel[A, B]]
 
 You can use the methods defined in [`jsonz.Fields`](src/main/scala/Fields.scala) to extract out parts of a json object at a much more fine-grained detail. An exmaple:
 
-```
+```scala
 package api
 import scalaz.Success
 import jsonz._

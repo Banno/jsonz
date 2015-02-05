@@ -4,7 +4,7 @@
 
 jsonz is a library that implements json serialization and deserialization via typeclasses in scala.
 
-# Differences between other libraries
+# Differences between other json parsing libraries
 
 ## Default Values
 

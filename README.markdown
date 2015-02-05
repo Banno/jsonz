@@ -98,7 +98,7 @@ import jsonz.joda.JodaTimeFormats._
 
 ### Spray
 
-Spray versions 1.1.x, 1.2.x, and 1.3.x are supported to read entit ies and complete requests as json via jsonz. To use the following import will need to be used, or to mixin the associated trait under the same name.
+Spray versions 1.1.x, 1.2.x, and 1.3.x are supported to read entities and complete requests as json via jsonz. To use the following import will need to be used, or to mixin the associated trait under the same name.
 
 > Note: Check the [build.sbt](build.sbt) for the specific version jsonz relies on.
 

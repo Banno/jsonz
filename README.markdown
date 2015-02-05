@@ -4,7 +4,7 @@
 
 jsonz is a library that implements json serialization and deserialization via typeclasses in scala.
 
-# Getting
+# Get jsonz
 
 > build.sbt
 

@@ -23,7 +23,7 @@ object DefaultValues {
 
 ## Failures
 
-Jsonz is different about failures. When parsing json failures are accumulated and delivered at the end. The type `JsonzValidation[T]` is a type alias for scalaz's `Validation[NonEmptyList[JsFailure], T]` so the user will receive either a `scalaz.Success` with an instance of the model filled in with the data from the json, or a `scalaz.Failure` that contains failures that occured duirng parsing. These failures could be from missing fields, or malformly typed elements.
+Jsonz is different about failures. When parsing json, failures are accumulated and delivered at the end. The type `JsonzValidation[T]` is a type alias for scalaz's `Validation[NonEmptyList[JsFailure], T]` so the user will receive either a `scalaz.Success` with an instance of the model filled in with the data from the json, or a `scalaz.Failure` that contains failures that occured duirng parsing. These failures could be from missing fields, or malformly typed elements.
 
 ### No Exceptions
 

@@ -44,7 +44,7 @@ object Example {
     implicit val fooFormat = productFormat2("thing", "other")(Foo.apply)(Foo.unapply)
 
     Jsonz.fromJsonStr[Foo]("""{"thing":12, "other":"hi"}""") // JsonzValidation[Foo]
-    Jsonz.toJsonStr(Foo(12, "hi")) // JsValue
+    Jsonz.toJsonStr(Foo(12, "hi"))
 }
 ```
 ## Out of the box type support

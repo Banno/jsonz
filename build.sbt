@@ -17,7 +17,12 @@ resolvers ++= Seq(
   "Typesafe Releases" at "http://repo.typesafe.com/typesafe/releases/"
 )
 
-publishTo := Some("Banno Snapshots Repo" at "http://nexus.banno.com/nexus/content/repositories/snapshots")
+publishTo <<= (version) { v =>
+  if (v.trim.endsWith("SNAPSHOT")) {
+    Some("Banno Snapshots Repo" at "http://nexus.banno.com/nexus/content/repositories/snapshots")
+  } else {
+    Some("Banno Releases Repo" at "http://nexus.banno.com/nexus/content/repositories/releases")
+  }
 
 credentials += Credentials(Path.userHome / ".ivy2" / ".banno_credentials")
 

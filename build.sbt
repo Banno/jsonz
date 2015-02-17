@@ -1,8 +1,10 @@
+import bintray.Keys._
+
 name := "jsonz"
 
 organization := "jsonz"
 
-version := "1.0"
+version := "1.0.0"
 
 scalaVersion := "2.11.5"
 
@@ -27,6 +29,18 @@ publishTo <<= (version) { v =>
 
 credentials += Credentials(Path.userHome / ".ivy2" / ".banno_credentials")
 
+
+// bintray
+bintrayPublishSettings
+
+bintrayOrganization in bintray := Some("banno")
+
+repository in bintray := "oss"
+
+licenses += ("Apache-2.0", url("http://www.apache.org/licenses/LICENSE-2.0.html"))
+
+
+// required deps
 libraryDependencies ++= Seq(
   "org.scalaz" %% "scalaz-core" % "7.1.0",
   "org.scalaz" %% "scalaz-typelevel" % "7.1.0",

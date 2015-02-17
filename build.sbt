@@ -23,6 +23,7 @@ publishTo <<= (version) { v =>
   } else {
     Some("Banno Releases Repo" at "http://nexus.banno.com/nexus/content/repositories/releases")
   }
+}
 
 credentials += Credentials(Path.userHome / ".ivy2" / ".banno_credentials")
 

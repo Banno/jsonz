@@ -55,7 +55,7 @@ private[jsonz] case class KeyRead(content: List[(String, JsValue)], fieldName: S
 private[jsonz] case class ReadingMap(content: List[(String, JsValue)]) extends DeserializerContext {
 
   def setField(fieldName: String) = KeyRead(content, fieldName)
-  def addValue(value: JsValue): DeserializerContext = throw new Exception("Cannot add a value on an object without a key, malformed JSON object!")
+  def addValue(value: JsValue): DeserializerContext = throw new ParseException("Cannot add a value on an object without a key, malformed JSON object!")
 
 }
 
@@ -94,17 +94,17 @@ private[jsonz] class JsValueDeserializer(factory: TypeFactory, klass: Class[_]) 
 
       case (JsonToken.END_ARRAY, ReadingList(content) :: stack) => (Some(JsArray(content)), stack)
 
-      case (JsonToken.END_ARRAY, _) => throw new RuntimeException("We should have been reading list, something got wrong")
+      case (JsonToken.END_ARRAY, _) => throw new ParseException("We should have been reading list, something got wrong")
 
       case (JsonToken.START_OBJECT, c) => (None, ReadingMap(List()) +: c)
 
       case (JsonToken.FIELD_NAME, (c: ReadingMap) :: stack) => (None, c.setField(jp.getCurrentName) +: stack)
 
-      case (JsonToken.FIELD_NAME, _) => throw new RuntimeException("We should be reading map, something got wrong")
+      case (JsonToken.FIELD_NAME, _) => throw new ParseException("We should be reading map, something got wrong")
 
       case (JsonToken.END_OBJECT, ReadingMap(content) :: stack) => (Some(JsObject(content)), stack)
 
-      case (JsonToken.END_OBJECT, _) => throw new RuntimeException("We should have been reading an object, something got wrong")
+      case (JsonToken.END_OBJECT, _) => throw new ParseException("We should have been reading an object, something got wrong")
 
       case _ => throw ctxt.mappingException(classOf[JsValue])
     }
@@ -119,7 +119,7 @@ private[jsonz] class JsValueDeserializer(factory: TypeFactory, klass: Class[_]) 
 
       case Some(v) if nextContext.isEmpty =>
         //strange, got value, but there is more tokens and have no prior context!
-        throw new Exception("Malformed JSON: Got a sequence of JsValue outside an array or an object.")
+        throw new ParseException("Malformed JSON: Got a sequence of JsValue outside an array or an object.")
 
       case maybeValue =>
         val toPass = maybeValue.map { v =>

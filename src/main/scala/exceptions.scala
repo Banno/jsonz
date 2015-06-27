@@ -17,4 +17,5 @@ object ParsingException {
   }
 }
 
+class ParseException(message: String) extends Throwable
 class ParsingException(message: String, cause: Throwable) extends IOException(message, cause)

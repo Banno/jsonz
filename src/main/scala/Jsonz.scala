@@ -1,6 +1,7 @@
 package jsonz
 import scalaz.{Failure, Success, Validation, ValidationNel}
 import scalaz.Validation.FlatMap._
+import java.io.IOException
 
 object Jsonz {
   import JsFailure._
@@ -28,6 +29,8 @@ object Jsonz {
   private[this] def tryToParse(f: => JsValue): JsonzValidation[JsValue] = try {
     Validation.success(f).toValidationNel
   } catch {
+    case _: ParseException   => jsFailureValidationNel("issue reading json")
     case _: ParsingException => jsFailureValidationNel("not valid JSON")
+    case e: IOException      => jsFailureValidationNel("problem reading json")
   }
 }

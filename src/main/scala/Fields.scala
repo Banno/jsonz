@@ -18,7 +18,7 @@ trait Fields {
         }
       }
     }
-    case _ => jsFailureValidationNel("is not an object")
+    case _ => jsFailureValidationNel(name, "is not an object")
   }
 
   def fieldWithValidationNel[T : Reads : Manifest](name: String,

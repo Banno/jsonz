@@ -10,8 +10,8 @@ object JsValueInstancesSpec extends JsonzSpec with JsValueInstances {
   import scalaz.std.math.bigDecimal._
   import org.scalacheck.Arbitrary._
 
-  implicit def arbJsArray = Arbitrary { genJsArray(100) }
-  implicit def arbJsObject = Arbitrary { genJsObject(100) }
+  implicit def arbJsArray = Arbitrary { genJsArray(90) }
+  implicit def arbJsObject = Arbitrary { genJsObject(75) }
 
   checkAll("JsNull", monoid.laws[JsNull.type])
   checkAll("JsBoolean", monoid.laws[JsBoolean])

@@ -88,7 +88,7 @@ implicit val DaysFormat: Format[Day] = javaEnumerationFormat[Day](Day.MONDAY)
 
 ### Recursive or Composed Values
 
-Given a recursive type or you will need to wrap the format in the `lazyFormat` method.
+Given a recursive type you will need to wrap the format in the `lazyFormat` method.
 
 ```scala
 import jsonz._

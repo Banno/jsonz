@@ -105,6 +105,8 @@ import jsonz.DefaultFormats._
 case class OuterType(child: InnerType)
 case class InnerType(message: String)
 implicit lazy val OuterTypeFormat: Format[OuterType] = lazyFormat(productFormat1("child")(OuterType.apply)(OuterType.unapply))
+implicit lazy val InnerTypeFormat: Format[InnerType] = 
+productFormat1("message")(InnerType.apply)(InnerType.unapply)
 ```
 
 ### Joda-Time

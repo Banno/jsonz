@@ -86,15 +86,25 @@ implicit val AnimalsFormat: Format[Animals.Value] = scalaEnumerationFormat(Anima
 implicit val DaysFormat: Format[Day] = javaEnumerationFormat[Day](Day.MONDAY)
 ```
 
-### Recursive Values
+### Recursive or Composed Values
 
-Given a recursive type you will need to wrap the format in the `lazyFormat` method.
+Given a recursive type or you will need to wrap the format in the `lazyFormat` method.
 
 ```scala
 import jsonz._
 import jsonz.DefaultFormats._
 case class RecursiveType(rs: List[RecursiveType])
 implicit lazy val RecursiveTypeFormat: Format[RecursiveType] = lazyFormat(productFormat1("rs")(RecursiveType.apply)(RecursiveType.unapply))
+```
+
+Similarly with compositions, such as a case class having another case class as a member:
+
+```scala
+import jsonz._
+import jsonz.DefaultFormats._
+case class OuterType(child: InnerType)
+case class InnerType(message: String)
+implicit lazy val OuterTypeFormat: Format[OuterType] = lazyFormat(productFormat1("child")(OuterType.apply)(OuterType.unapply))
 ```
 
 ### Joda-Time

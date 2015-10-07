@@ -108,6 +108,8 @@ implicit lazy val OuterTypeFormat: Format[OuterType] = lazyFormat(productFormat1
 implicit lazy val InnerTypeFormat: Format[InnerType] = productFormat1("message")(InnerType.apply)(InnerType.unapply)
 ```
 
+**Note**: Flipping the order of the above definitions would eliminate the need for `lazyFormat`, however if one format is in a 3rd party package `lazyFormat` would allow you to define this structure.
+
 ### Joda-Time
 
 Joda-Time is typically the first library chosen for performing date/time operations on the JVM. Jsonz offers support for reading and writing it's `org.joda.time.DateTime` class via the following imports. The formats used to try and parse are: `ISO 8601` (with and without millis), `yyyy-MM-dd`, and [RFC 1123](https://tools.ietf.org/html/rfc1123) (EEE, dd MMM yyyy HH:mm:ss 'GMT').

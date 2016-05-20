@@ -44,7 +44,7 @@ licenses += ("Apache-2.0", url("http://www.apache.org/licenses/LICENSE-2.0.html"
 libraryDependencies ++= Seq(
   "org.scalaz" %% "scalaz-core" % "7.1.0",
   "org.scalaz" %% "scalaz-typelevel" % "7.1.0",
-  "com.fasterxml.jackson.module" %% "jackson-module-scala" % "2.4.1",
+  "com.fasterxml.jackson.module" %% "jackson-module-scala" % "2.6.6",
   "com.typesafe.akka" %% "akka-actor" % "2.3.6" % "provided"
 )
 

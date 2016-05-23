@@ -19,17 +19,6 @@ resolvers ++= Seq(
   "Typesafe Releases" at "http://repo.typesafe.com/typesafe/releases/"
 )
 
-publishTo <<= (version) { v =>
-  if (v.trim.endsWith("SNAPSHOT")) {
-    Some("Banno Snapshots Repo" at "http://nexus.banno.com/nexus/content/repositories/snapshots")
-  } else {
-    Some("Banno Releases Repo" at "http://nexus.banno.com/nexus/content/repositories/releases")
-  }
-}
-
-credentials += Credentials(Path.userHome / ".ivy2" / ".banno_credentials")
-
-
 // bintray
 bintrayPublishSettings
 
@@ -38,6 +27,16 @@ bintrayOrganization in bintray := Some("banno")
 repository in bintray := "oss"
 
 licenses += ("Apache-2.0", url("http://www.apache.org/licenses/LICENSE-2.0.html"))
+
+publishTo := {
+  if (version.value.trim.endsWith("SNAPSHOT")) {
+    Some("Banno Snapshots Repo" at "http://nexus.banno.com/nexus/content/repositories/snapshots")
+  } else {
+    (publishTo in bintray).value
+  }
+}
+
+credentials += Credentials(Path.userHome / ".ivy2" / ".banno_credentials")
 
 
 // required deps

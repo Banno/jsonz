@@ -1,5 +1,7 @@
 # jsonz
 
+[ ![Download](https://api.bintray.com/packages/banno/oss/jsonz/images/download.svg) ](https://bintray.com/banno/oss/jsonz/_latestVersion)
+
 > A little of sjson, sjsonapp, scalaz and play's JSON libraries mixed together.
 
 jsonz is a library that implements json serialization and deserialization via typeclasses in scala.
@@ -12,7 +14,7 @@ jsonz is a library that implements json serialization and deserialization via ty
 resolvers += "bintray-banno-oss-releases" at "http://dl.bintray.com/banno/oss"
 
 libraryDependencies ++= Seq(
-  "jsonz" %% "jsonz" % "1.2.0"
+  "jsonz" %% "jsonz" % "1.4.0"
 )
 ```
 

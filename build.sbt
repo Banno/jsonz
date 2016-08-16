@@ -1,14 +1,10 @@
-import bintray.Keys._
-
 name := "jsonz"
 
 organization := "jsonz"
 
-version := "1.4.0-SNAPSHOT"
+scalaVersion := "2.11.8"
 
-scalaVersion := "2.11.5"
-
-crossScalaVersions := Seq("2.10.4", "2.11.5")
+crossScalaVersions := Seq("2.10.6", "2.11.8")
 
 scalacOptions ++= Seq("-deprecation", "-feature", "-unchecked")
 
@@ -19,12 +15,9 @@ resolvers ++= Seq(
   "Typesafe Releases" at "http://repo.typesafe.com/typesafe/releases/"
 )
 
-// bintray
-bintrayPublishSettings
+bintrayOrganization := Some("banno")
 
-bintrayOrganization in bintray := Some("banno")
-
-repository in bintray := "oss"
+bintrayRepository := "oss"
 
 licenses += ("Apache-2.0", url("http://www.apache.org/licenses/LICENSE-2.0.html"))
 
@@ -38,19 +31,22 @@ publishTo := {
 
 credentials += Credentials(Path.userHome / ".ivy2" / ".banno_credentials")
 
+val jacksonVersion = "2.6.7"
+val scalazVersion = "7.1.0"
+val akkaVersion = "2.3.15"
 
 // required deps
 libraryDependencies ++= Seq(
-  "org.scalaz" %% "scalaz-core" % "7.1.0",
-  "org.scalaz" %% "scalaz-typelevel" % "7.1.0",
-  "com.fasterxml.jackson.module" %% "jackson-module-scala" % "2.6.5",
-  "com.typesafe.akka" %% "akka-actor" % "2.3.6" % "provided"
+  "org.scalaz" %% "scalaz-core" % scalazVersion,
+  "org.scalaz" %% "scalaz-typelevel" % scalazVersion,
+  "com.fasterxml.jackson.module" %% "jackson-module-scala" % jacksonVersion,
+  "com.typesafe.akka" %% "akka-actor" % akkaVersion % "provided"
 )
 
 // joda datetime support
 libraryDependencies ++= Seq(
-  "org.joda" % "joda-convert" % "1.1" % "provided",
-  "joda-time" % "joda-time" % "2.0" % "provided"
+  "org.joda" % "joda-convert" % "1.8.1" % "provided",
+  "joda-time" % "joda-time" % "2.9.4" % "provided"
 )
 
 // spray support
@@ -73,5 +69,5 @@ libraryDependencies ++=
   Seq(
     "org.scalacheck" %% "scalacheck" % "1.11.5" % "test",
     "org.typelevel" %% "scalaz-specs2" % "0.3.0" % "test",
-    "org.scalaz" %% "scalaz-scalacheck-binding" % "7.1.0" % "test"
+    "org.scalaz" %% "scalaz-scalacheck-binding" % scalazVersion % "test"
   )

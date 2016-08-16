@@ -4,8 +4,6 @@ name := "jsonz"
 
 organization := "jsonz"
 
-version := "1.4.0-SNAPSHOT"
-
 scalaVersion := "2.11.5"
 
 crossScalaVersions := Seq("2.10.4", "2.11.5")

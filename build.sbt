@@ -2,9 +2,9 @@ name := "jsonz"
 
 organization := "jsonz"
 
-scalaVersion := "2.11.5"
+scalaVersion := "2.11.8"
 
-crossScalaVersions := Seq("2.10.4", "2.11.5")
+crossScalaVersions := Seq("2.10.6", "2.11.8")
 
 scalacOptions ++= Seq("-deprecation", "-feature", "-unchecked")
 
@@ -36,14 +36,14 @@ credentials += Credentials(Path.userHome / ".ivy2" / ".banno_credentials")
 libraryDependencies ++= Seq(
   "org.scalaz" %% "scalaz-core" % "7.1.0",
   "org.scalaz" %% "scalaz-typelevel" % "7.1.0",
-  "com.fasterxml.jackson.module" %% "jackson-module-scala" % "2.6.5",
-  "com.typesafe.akka" %% "akka-actor" % "2.3.6" % "provided"
+  "com.fasterxml.jackson.module" %% "jackson-module-scala" % "2.6.7",
+  "com.typesafe.akka" %% "akka-actor" % "2.3.15" % "provided"
 )
 
 // joda datetime support
 libraryDependencies ++= Seq(
-  "org.joda" % "joda-convert" % "1.1" % "provided",
-  "joda-time" % "joda-time" % "2.0" % "provided"
+  "org.joda" % "joda-convert" % "1.8.1" % "provided",
+  "joda-time" % "joda-time" % "2.9.4" % "provided"
 )
 
 // spray support

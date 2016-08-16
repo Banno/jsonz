@@ -31,13 +31,16 @@ publishTo := {
 
 credentials += Credentials(Path.userHome / ".ivy2" / ".banno_credentials")
 
+val jacksonVersion = "2.6.7"
+val scalazVersion = "7.1.0"
+val akkaVersion = "2.3.15"
 
 // required deps
 libraryDependencies ++= Seq(
-  "org.scalaz" %% "scalaz-core" % "7.1.0",
-  "org.scalaz" %% "scalaz-typelevel" % "7.1.0",
-  "com.fasterxml.jackson.module" %% "jackson-module-scala" % "2.6.7",
-  "com.typesafe.akka" %% "akka-actor" % "2.3.15" % "provided"
+  "org.scalaz" %% "scalaz-core" % scalazVersion,
+  "org.scalaz" %% "scalaz-typelevel" % scalazVersion,
+  "com.fasterxml.jackson.module" %% "jackson-module-scala" % jacksonVersion,
+  "com.typesafe.akka" %% "akka-actor" % akkaVersion % "provided"
 )
 
 // joda datetime support
@@ -66,5 +69,5 @@ libraryDependencies ++=
   Seq(
     "org.scalacheck" %% "scalacheck" % "1.11.5" % "test",
     "org.typelevel" %% "scalaz-specs2" % "0.3.0" % "test",
-    "org.scalaz" %% "scalaz-scalacheck-binding" % "7.1.0" % "test"
+    "org.scalaz" %% "scalaz-scalacheck-binding" % scalazVersion % "test"
   )

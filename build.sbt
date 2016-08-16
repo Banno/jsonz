@@ -1,5 +1,3 @@
-import bintray.Keys._
-
 name := "jsonz"
 
 organization := "jsonz"
@@ -17,12 +15,9 @@ resolvers ++= Seq(
   "Typesafe Releases" at "http://repo.typesafe.com/typesafe/releases/"
 )
 
-// bintray
-bintrayPublishSettings
+bintrayOrganization := Some("banno")
 
-bintrayOrganization in bintray := Some("banno")
-
-repository in bintray := "oss"
+bintrayRepository := "oss"
 
 licenses += ("Apache-2.0", url("http://www.apache.org/licenses/LICENSE-2.0.html"))
 

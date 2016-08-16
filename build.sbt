@@ -29,6 +29,8 @@ publishTo := {
   }
 }
 
+releaseCrossBuild := true
+
 credentials += Credentials(Path.userHome / ".ivy2" / ".banno_credentials")
 
 val jacksonVersion = "2.6.7"

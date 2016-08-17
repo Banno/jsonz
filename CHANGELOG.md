@@ -1,4 +1,10 @@
-# 1.4.0 (unreleased)
+# 1.5.0 (Unreleased)
+
+DEPENDENCY CHANGES:
+
+- Removed dependency on scalaz-typelevel
+
+# 1.4.0 (2016-08-16)
 
 VERSION UPGRADES:
 

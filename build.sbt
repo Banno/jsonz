@@ -40,7 +40,6 @@ val akkaVersion = "2.3.15"
 // required deps
 libraryDependencies ++= Seq(
   "org.scalaz" %% "scalaz-core" % scalazVersion,
-  "org.scalaz" %% "scalaz-typelevel" % scalazVersion,
   "com.fasterxml.jackson.module" %% "jackson-module-scala" % jacksonVersion,
   "com.typesafe.akka" %% "akka-actor" % akkaVersion % "provided"
 )

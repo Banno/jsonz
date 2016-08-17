@@ -3,7 +3,7 @@ import jsonz.models._
 import scalaz._
 
 object ReadWriteJsonSpec extends JsonzSpec {
-  "can write a person" in check { (person: Person) =>
+  "can write a person" in prop { (person: Person) =>
     val js = Jsonz.toJson(person)
     val middleJson = person.name.middle.map(JsString.apply).getOrElse(JsNull)
     js must beLike {

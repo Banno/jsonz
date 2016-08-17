@@ -8,7 +8,7 @@ object SerializationSpec extends JsonzSpec {
   import jsonz._
   import jsonz.DefaultFormats._
 
-  "Writes arbitrary JsValue's to and from strings" ! check { js: JsValue =>
+  "Writes arbitrary JsValue's to and from strings" ! prop { js: JsValue =>
     val wrote = Jsonz.toJsonStr(js)
     val read = Jsonz.fromJsonStr[JsValue](wrote)
     read must beSuccessful(js)
@@ -34,13 +34,13 @@ object SerializationSpec extends JsonzSpec {
     Jsonz.fromJsonStr[String]("not valid json") must containFailure(JsFailureStatement("not valid JSON"))
   }
 
-  "to/from bytes" ! check { js: JsValue =>
+  "to/from bytes" ! prop { js: JsValue =>
     val wrote: Array[Byte] = Jsonz.toJsonBytes(js)
     val read = Jsonz.fromJsonBytes[JsValue](wrote)
     read must beSuccessful(js)
   }
 
-  "to/from Input/Output streams" ! check { js: JsValue =>
+  "to/from Input/Output streams" ! prop { js: JsValue =>
     import java.io.{ByteArrayInputStream, ByteArrayOutputStream}
 
     val out = new ByteArrayOutputStream

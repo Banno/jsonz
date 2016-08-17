@@ -8,9 +8,9 @@ object DefaultFormatsSpec extends JsonzSpec {
   import DefaultFormats._
   import Jsonz._
 
-  "JsValue" ! check(toAndFrom[JsValue])
+  "JsValue" ! toAndFrom[JsValue]
 
-  "Int" ! check(toAndFrom[Int])
+  "Int" ! toAndFrom[Int]
   "Int failures" ! {
     fromJson[Int](JsString("abc")) must containJsFailureStatement("not an int")
     fromJson[Int](JsNull) must containJsFailureStatement("not an int")
@@ -20,7 +20,7 @@ object DefaultFormatsSpec extends JsonzSpec {
     fromJson[Int](JsNumber(1.23)) must containJsFailureStatement("not an int")
   }
 
-  "Short" ! check(toAndFrom[Short])
+  "Short" ! toAndFrom[Short]
   "Short failures" ! {
     fromJson[Short](JsString("abc")) must containJsFailureStatement("not a short")
     fromJson[Short](JsNull) must containJsFailureStatement("not a short")
@@ -31,7 +31,7 @@ object DefaultFormatsSpec extends JsonzSpec {
     fromJson[Short](JsNumber(32768)) must containJsFailureStatement("not a short")
   }
 
-  "Long" ! check(toAndFrom[Long])
+  "Long" ! toAndFrom[Long]
   "Long failures" ! {
     fromJson[Long](JsString("abc")) must containJsFailureStatement("not a long")
     fromJson[Long](JsNull) must containJsFailureStatement("not a long")
@@ -41,7 +41,7 @@ object DefaultFormatsSpec extends JsonzSpec {
     fromJson[Long](JsNumber(1.23)) must containJsFailureStatement("not a long")
   }
 
-  "Float" ! check(toAndFrom[Float])
+  "Float" ! toAndFrom[Float]
   "Float failures" ! {
     fromJson[Float](JsString("abc")) must containJsFailureStatement("not a float")
     fromJson[Float](JsNull) must containJsFailureStatement("not a float")
@@ -50,7 +50,7 @@ object DefaultFormatsSpec extends JsonzSpec {
     fromJson[Float](JsObject(Nil)) must containJsFailureStatement("not a float")
   }
 
-  "Double" ! check(toAndFrom[Double])
+  "Double" ! toAndFrom[Double]
   "Double failures" ! {
     fromJson[Double](JsString("abc")) must containJsFailureStatement("not a double")
     fromJson[Double](JsNull) must containJsFailureStatement("not a double")
@@ -59,9 +59,9 @@ object DefaultFormatsSpec extends JsonzSpec {
     fromJson[Double](JsObject(Nil)) must containJsFailureStatement("not a double")
   }
 
-  "BigDecimal" ! pending // check(toAndFrom[BigDecimal]) // arithmetic overflows
+  "BigDecimal" ! pending // toAndFrom[BigDecimal] // arithmetic overflows
 
-  "Boolean" ! check(toAndFrom[Boolean])
+  "Boolean" ! toAndFrom[Boolean]
   "Boolean failures" ! {
     fromJson[Boolean](JsString("abc")) must containJsFailureStatement("not a boolean")
     fromJson[Boolean](JsNull) must containJsFailureStatement("not a boolean")
@@ -70,9 +70,9 @@ object DefaultFormatsSpec extends JsonzSpec {
     fromJson[Boolean](JsNumber(1.23)) must containJsFailureStatement("not a boolean")
    }
 
-  "Map[String, String]" ! check(toAndFrom[Map[String, String]])
-  "Map[String, Int]" ! check(toAndFrom[Map[String, Int]])
-  "Map[String, Map[String, Int]]" ! check(toAndFrom[Map[String, Map[String, Int]]])
+  "Map[String, String]" ! toAndFrom[Map[String, String]]
+  "Map[String, Int]" ! toAndFrom[Map[String, Int]]
+  "Map[String, Map[String, Int]]" ! toAndFrom[Map[String, Map[String, Int]]]
   "Map failures" ! {
     fromJson[Map[String, String]](JsString("abc")) must containJsFailureStatement("not an object")
     fromJson[Map[String, String]](JsNull) must containJsFailureStatement("not an object")
@@ -82,7 +82,7 @@ object DefaultFormatsSpec extends JsonzSpec {
     fromJson[Map[String, String]](JsObject(Seq("abc" -> JsNumber(123)))) must containJsFieldFailure("abc", "not a string")
   }
 
-  "String" ! check(toAndFrom[String])
+  "String" ! toAndFrom[String]
   "String failures" ! {
     fromJson[String](JsObject(Nil)) must containJsFailureStatement("not a string")
     fromJson[String](JsNull) must containJsFailureStatement("not a string")
@@ -92,11 +92,11 @@ object DefaultFormatsSpec extends JsonzSpec {
   }
 
   import scala.collection.mutable
-  "List[String]" ! check(toAndFrom[List[String]])
-  "List[Int]" ! check(toAndFrom[List[Int]])
-  "Seq[String]" ! check(toAndFrom[Seq[String]])
-  "Stream[String]" ! check(toAndFrom[Stream[String]])
-  "mutable.Set[String]" ! check(toAndFrom[mutable.Set[String]])
+  "List[String]" ! toAndFrom[List[String]]
+  "List[Int]" ! toAndFrom[List[Int]]
+  "Seq[String]" ! toAndFrom[Seq[String]]
+  "Stream[String]" ! toAndFrom[Stream[String]]
+  "mutable.Set[String]" ! toAndFrom[mutable.Set[String]]
   "Traversable failures" ! {
     fromJson[List[String]](JsObject(Nil)) must containJsFailureStatement("not an array")
     fromJson[List[String]](JsNull) must containJsFailureStatement("not an array")
@@ -108,8 +108,8 @@ object DefaultFormatsSpec extends JsonzSpec {
     fromJson[mutable.Set[String]](JsArray(Seq(JsNumber(1.23), JsBoolean(false)))) must containJsFailureStatement("not a string")
   }
 
-  "Array[String]" ! check(transformFirst[Array[String], JsArray](items => JsArray(items.map(toJson(_)))))
-  "Array[Int]" ! check(transformFirst[Array[Int], JsArray](items => JsArray(items.map(toJson(_)))))
+  "Array[String]" ! transformFirst[Array[String], JsArray](items => JsArray(items.map(toJson(_))))
+  "Array[Int]" ! transformFirst[Array[Int], JsArray](items => JsArray(items.map(toJson(_))))
   "Array failures" ! {
     fromJson[Array[String]](JsObject(Nil)) must containJsFailureStatement("not an array")
     fromJson[Array[String]](JsNull) must containJsFailureStatement("not an array")
@@ -119,14 +119,14 @@ object DefaultFormatsSpec extends JsonzSpec {
     fromJson[Array[String]](JsArray(Seq(JsBoolean(false)))) must containJsFailureStatement("not a string")
   }
 
-  "Option[Int]" ! check(toAndFrom[Option[Int]])
-  "Option[String]" ! check(toAndFrom[Option[String]])
-  "Option[Map[String, List[Int]]]" ! check(toAndFrom[Option[Map[String, List[Int]]]])
+  "Option[Int]" ! toAndFrom[Option[Int]]
+  "Option[String]" ! toAndFrom[Option[String]]
+  "Option[Map[String, List[Int]]]" ! toAndFrom[Option[Map[String, List[Int]]]]
   "Option failures" ! {
     fromJson[Option[Int]](JsString("abc")) must containJsFailureStatement("not an int")
   }
 
-  "NonEmptyList[Int]" ! check(toAndFrom[NonEmptyList[Int]])
+  "NonEmptyList[Int]" ! toAndFrom[NonEmptyList[Int]]
   "NonEmptyList failures" ! {
     fromJson[NonEmptyList[String]](JsObject(Nil)) must containJsFailureStatement("not an array")
     fromJson[NonEmptyList[String]](JsNull) must containJsFailureStatement("not an array")
@@ -137,10 +137,10 @@ object DefaultFormatsSpec extends JsonzSpec {
     fromJson[NonEmptyList[String]](JsArray(Nil)) must containJsFailureStatement("not a non-empty array")
   }
 
-  "NonEmptyList[JsFailure]" ! check(toAndFrom[NonEmptyList[JsFailure]])
+  "NonEmptyList[JsFailure]" ! toAndFrom[NonEmptyList[JsFailure]]
 
-  "Left[Int, _]" ! check(toAndFrom[({ type l[a] = Left[a, String] })#l, Int](Left.apply))
-  "Right[_, Int]" ! check(toAndFrom[({ type r[a] = Right[String, a] })#r, Int](Right.apply))
+  "Left[Int, _]" ! toAndFrom[({ type l[a] = Left[a, String] })#l, Int](Left.apply)
+  "Right[_, Int]" ! toAndFrom[({ type r[a] = Right[String, a] })#r, Int](Right.apply)
 
   "Left's and Right's should combine powers" ! {
     val model1: Either[Int, String] = Left(100)

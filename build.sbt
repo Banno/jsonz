@@ -34,8 +34,11 @@ releaseCrossBuild := true
 credentials += Credentials(Path.userHome / ".ivy2" / ".banno_credentials")
 
 val jacksonVersion = "2.6.7"
-val scalazVersion = "7.1.0"
+val scalazVersion = "7.2.5"
 val akkaVersion = "2.3.15"
+
+val scalaCheckVersion = "1.13.2"
+val specs2Version = "3.8.4"
 
 // required deps
 libraryDependencies ++= Seq(
@@ -63,11 +66,11 @@ libraryDependencies ++= {
 }
 
 // specs2 support
-libraryDependencies += "org.specs2" %% "specs2" % "2.4.2" % "provided"
+libraryDependencies += "org.specs2" %% "specs2-core" % specs2Version % "provided"
 
-// test deps
 libraryDependencies ++=
   Seq(
-    "org.scalacheck" %% "scalacheck" % "1.11.5" % "test",
+    "org.scalacheck" %% "scalacheck" % scalaCheckVersion % "test",
+    "org.specs2" %% "specs2-scalacheck" % specs2Version % "test",
     "org.scalaz" %% "scalaz-scalacheck-binding" % scalazVersion % "test"
   )

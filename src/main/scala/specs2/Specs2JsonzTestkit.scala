@@ -43,10 +43,10 @@ trait Specs2JsonzTestkit extends MatchersImplicits {
     ((v: Validation[_,T]) => v.exists(f), (v: Validation[_,T]) => s"""$v did not match""")
 
   def containFailure[A, B](a: A): Matcher[ValidationNel[A, B]] =
-    ((v: ValidationNel[A, B]) => v.swap.map(_.list.contains(a)) getOrElse false)
+    ((v: ValidationNel[A, B]) => v.swap.map(_.list.toList.contains(a)) getOrElse false)
 
   def haveFailureCount[A, B](n: Int): Matcher[ValidationNel[A, B]] =
-    ((v: ValidationNel[A, B]) => v.swap.map(_.list.size == n) getOrElse false)
+    ((v: ValidationNel[A, B]) => v.swap.map(_.list.length == n) getOrElse false)
 
   private[this] def extract[T](js: JsValue, field: Symbol)(implicit tr: Reads[T]): Option[T] =
     js.asInstanceOf[JsObject].get(field.name).map(tr.reads).flatMap(_.toOption)

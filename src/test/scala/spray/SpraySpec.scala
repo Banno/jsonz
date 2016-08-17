@@ -9,7 +9,7 @@ object SpraySpec extends JsonzSpec {
   import DefaultFormats._
 
   "marshaller" should {
-    "provide for anything that has a Writes[T]" in check { jsv: JsValue =>
+    "provide for anything that has a Writes[T]" in prop { jsv: JsValue =>
       marshal(jsv) must beRight(
         HttpEntity(ContentTypes.`application/json`, Jsonz.toJsonBytes(jsv))
       )
@@ -17,7 +17,7 @@ object SpraySpec extends JsonzSpec {
   }
 
   "unmarshaller" should {
-    "provide for anything that has a Reads[T]" in check { jsv: JsValue =>
+    "provide for anything that has a Reads[T]" in prop { jsv: JsValue =>
       val body = HttpEntity(ContentTypes.`application/json`, Jsonz.toJsonBytes(jsv))
       body.as[JsValue] must beRight(jsv)
     }

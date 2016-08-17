@@ -89,7 +89,7 @@ package object models {
       for {
         head <- Arbitrary.arbitrary[A]
         tail <- Gen.listOfN(size, arbitrary[A])
-      } yield NonEmptyList.nel(head, tail)
+      } yield NonEmptyList.nel(head, IList.fromList(tail))
     }
   }
 
@@ -135,7 +135,7 @@ package object models {
       field <- arbitrary[String]
       n  <- Gen.choose(1, 4)
       failures <- Gen.listOfN(n, arbitrary[JsFailure])
-    } yield JsFieldFailure(field, NonEmptyList.nel(failures.head, failures.tail))
+    } yield JsFieldFailure(field, NonEmptyList.nel(failures.head, IList.fromList(failures.tail)))
 
     Gen.frequency(
       (4, genJsFailureStatement),

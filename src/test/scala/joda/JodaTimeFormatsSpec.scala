@@ -12,21 +12,22 @@ object JodaTimeFormatsSpec extends JsonzSpec with ScalaCheck with JodaTimeFormat
 
   implicit val arbitraryDate: Arbitrary[DateTime] = Arbitrary {
     for {
-      d <- Arbitrary.arbitrary[Date] if d.getYear >= 0 && d.getYear <= 9999
-    } yield new DateTime(d, DateTimeZone.UTC)
+      d <- Arbitrary.arbitrary[Date]
+      year <- Gen.choose(0, 9999)
+    } yield (new DateTime(d, DateTimeZone.UTC)).withYear(year)
   }
 
   "DateTimeFormat" should {
     "read from ISO8601 format" in {
-      check(toAndFrom[DateTime])
+      toAndFrom[DateTime]
     }
 
     "read from YYYY-MM-dd format" in {
-      check(transformFirst[DateTime, JsString](dt => JsString(dt.toString("YYYY-MM-dd"))))
+      transformFirst[DateTime, JsString](dt => JsString(dt.toString("YYYY-MM-dd")))
     }
 
     "read from long format" in {
-      check(transformFirst[DateTime, JsNumber](dt => JsNumber(dt.getMillis)))
+      transformFirst[DateTime, JsNumber](dt => JsNumber(dt.getMillis))
     }
   }
 

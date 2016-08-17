@@ -172,13 +172,13 @@ trait DefaultFormats {
         if (overallV.exists(_.isEmpty)) {
           jsFailureValidationNel("not a non-empty array")
         } else {
-          overallV.map(lst => NonEmptyList.nel(lst.head, lst.tail))
+          overallV.map(lst => NonEmptyList.nel(lst.head, IList.fromList(lst.tail)))
         }
 
       case _ => jsFailureValidationNel("not an array")
     }
 
-    def writes(as: NonEmptyList[T]) = JsArray(as.map(tw.writes).list.toSeq)
+    def writes(as: NonEmptyList[T]) = JsArray(as.map(tw.writes).list.toList)
   }
 
   private[this] def tryCatchingToJsFailureValidationNel[T, E <: Exception](msg: String, f: => T)(implicit m: Manifest[E]): JsonzValidation[T] = {

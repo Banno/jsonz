@@ -13,7 +13,7 @@ trait JsonzSpec extends Specification with ScalaCheck with MatchersImplicits wit
     props.properties.foreach {
       case (name2, prop) =>
         name in {
-          name2 ! check(prop)
+          name2 ! prop
         }
     }
 

@@ -34,11 +34,11 @@ releaseCrossBuild := true
 credentials += Credentials(Path.userHome / ".ivy2" / ".banno_credentials")
 
 val jacksonVersion = "2.6.7"
-val scalazVersion = "7.2.5"
+val scalazVersion = "7.2.6"
 val akkaVersion = "2.3.15"
 
 val scalaCheckVersion = "1.13.2"
-val specs2Version = "3.8.4"
+val specs2Version = "3.8.5"
 
 // required deps
 libraryDependencies ++= Seq(

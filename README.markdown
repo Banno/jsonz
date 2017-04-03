@@ -14,7 +14,7 @@ jsonz is a library that implements json serialization and deserialization via ty
 resolvers += "bintray-banno-oss-releases" at "http://dl.bintray.com/banno/oss"
 
 libraryDependencies ++= Seq(
-  "jsonz" %% "jsonz" % "1.4.0"
+  "jsonz" %% "jsonz" % "1.5.0"
 )
 ```
 

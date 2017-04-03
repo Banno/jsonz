@@ -4,7 +4,6 @@ DEPENDENCY CHANGES:
 
 - Upgraded scalaz to 7.2.10 from 7.1.x
 - Removed dependency on scalaz-typelevel
-- 
 
 # 1.4.0 (2016-08-16)
 

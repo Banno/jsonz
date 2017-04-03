@@ -34,17 +34,17 @@ releaseCrossBuild := true
 credentials += Credentials(Path.userHome / ".ivy2" / ".banno_credentials")
 
 val jacksonVersion = "2.6.7"
-val scalazVersion = "7.2.6"
+val scalazVersion = "7.2.10"
 val akkaVersion = "2.3.15"
 
-val scalaCheckVersion = "1.13.2"
-val specs2Version = "3.8.5"
+val scalaCheckVersion = "1.13.4"
+val specs2Version = "3.8.9"
 
 // required deps
 libraryDependencies ++= Seq(
   "org.scalaz" %% "scalaz-core" % scalazVersion,
   "com.fasterxml.jackson.module" %% "jackson-module-scala" % jacksonVersion,
-  "com.typesafe.akka" %% "akka-actor" % akkaVersion % "provided"
+  "com.typesafe.akka" %% "akka-actor" % akkaVersion % Optional
 )
 
 // joda datetime support
@@ -57,20 +57,20 @@ libraryDependencies ++= Seq(
 libraryDependencies ++= {
   if (scalaVersion.value.startsWith("2.11"))
     Seq(
-      "io.spray" % "spray-httpx" % "1.3.1" % "provided"
+      "io.spray" % "spray-httpx" % "1.3.1" % Optional
     )
   else
     Seq(
-      "io.spray" % "spray-httpx" % "1.1.1" % "provided"
+      "io.spray" % "spray-httpx" % "1.1.1" % Optional
     )
 }
 
 // specs2 support
-libraryDependencies += "org.specs2" %% "specs2-core" % specs2Version % "provided"
+libraryDependencies += "org.specs2" %% "specs2-core" % specs2Version % Optional
 
 libraryDependencies ++=
   Seq(
-    "org.scalacheck" %% "scalacheck" % scalaCheckVersion % "test",
-    "org.specs2" %% "specs2-scalacheck" % specs2Version % "test",
-    "org.scalaz" %% "scalaz-scalacheck-binding" % scalazVersion % "test"
+    "org.scalacheck" %% "scalacheck" % scalaCheckVersion % Test,
+    "org.specs2" %% "specs2-scalacheck" % specs2Version % Test,
+    "org.scalaz" %% "scalaz-scalacheck-binding" % scalazVersion % Test
   )

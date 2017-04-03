@@ -1,4 +1,4 @@
-# 1.5.0 (Unreleased)
+# 1.5.0 (2017-04-03)
 
 DEPENDENCY CHANGES:
 

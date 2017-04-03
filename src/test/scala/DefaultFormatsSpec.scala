@@ -152,8 +152,8 @@ object DefaultFormatsSpec extends JsonzSpec {
 
   "Left's and Right's can trip us up sometimes" in {
     val model1: Either[Int, String] = Left(100)
-    fromJson[Either[String, Int]](toJson(model1)).toOption must beSome(Right(100))
-    fromJson[Either[Double, Int]](toJson(model1)).toOption must beSome(Left(100D))
+    fromJson[Either[String, Int]](toJson(model1)).toOption must beSome(Right(100): Either[String, Int])
+    fromJson[Either[Double, Int]](toJson(model1)).toOption must beSome(Left(100D): Either[Double, Int])
   }
 
   "Left's and Right's shouldn't be able to read other formats though" ! {

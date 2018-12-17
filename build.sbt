@@ -2,9 +2,9 @@ name := "jsonz"
 
 organization := "jsonz"
 
-scalaVersion := "2.11.8"
+scalaVersion := "2.11.12"
 
-crossScalaVersions := Seq("2.10.6", "2.11.8")
+crossScalaVersions := Seq("2.10.6", "2.11.12")
 
 scalacOptions ++= Seq("-deprecation", "-feature", "-unchecked")
 
@@ -33,7 +33,7 @@ releaseCrossBuild := true
 
 credentials += Credentials(Path.userHome / ".ivy2" / ".banno_credentials")
 
-val jacksonVersion = "2.6.7"
+val jacksonVersion = "2.9.5"
 val scalazVersion = "7.2.10"
 val akkaVersion = "2.3.15"
 

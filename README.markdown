@@ -1,3 +1,5 @@
+Depracation Notice: jsonz is deprecated and no longer supported. Instead, it is recommended to use [!circe](https://github.com/circe/circe) for json processing.
+
 # jsonz
 
 [ ![Download](https://api.bintray.com/packages/banno/oss/jsonz/images/download.svg) ](https://bintray.com/banno/oss/jsonz/_latestVersion)

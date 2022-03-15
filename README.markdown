@@ -1,4 +1,4 @@
-Depracation Notice: jsonz is deprecated and no longer supported. Instead, it is recommended to use [!circe](https://github.com/circe/circe) for json processing.
+Depracation Notice: jsonz is deprecated and no longer supported. Instead, it is recommended to use [circe](https://github.com/circe/circe) for json processing.
 
 # jsonz
 
